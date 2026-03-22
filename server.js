@@ -1,12 +1,13 @@
 ﻿require("dotenv").config();
+
 const express = require("express");
-const dotenv = require("dotenv");
 const cors = require("cors");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 
 const connectDB = require("./config/db");
 
+// Routes
 const authRoutes = require("./routes/authRoutes");
 const vegetableRoutes = require("./routes/vegetableRoutes");
 const orderRoutes = require("./routes/orderRoutes");
@@ -14,57 +15,43 @@ const farmerRoutes = require("./routes/farmerRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const favoriteRoutes = require("./routes/favoriteRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
-
-// ✅ FIX: use require instead of import
 const chatRoutes = require("./routes/chatRoutes");
 
-dotenv.config();
+const app = express();
+
+// ---------------- DB ----------------
 connectDB();
 
-const app = express(); // ✅ define before use
-
-// ---------------- CORS ----------------
-const allowedOrigins = new Set([
+// ---------------- CORS FIX ----------------
+const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "http://127.0.0.1:5173",
   "http://127.0.0.1:5174",
-  process.env.FRONTEND_URL
-].filter(Boolean));
+  "https://krushisetu.vercel.app" // ✅ your frontend
+];
 
-const corsOptions = {
-  origin(origin, callback) {
-    if (!origin || allowedOrigins.has(origin)) {
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
-      return;
+    } else {
+      callback(new Error("CORS not allowed"));
     }
-    callback(new Error(`Origin ${origin} is not allowed by CORS`));
   },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  optionsSuccessStatus: 204
-};
+  credentials: true
+}));
 
 // ---------------- Middleware ----------------
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  skip: (req) => req.method === "OPTIONS",
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { message: "Too many requests from this IP" }
-});
-
-app.use(cors(corsOptions));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(morgan("combined"));
-app.use(limiter);
-app.use("/api", (req, res, next) => {
-  res.setHeader("Content-Type", "application/json; charset=utf-8");
-  next();
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
 });
+app.use(limiter);
 
 // ---------------- Routes ----------------
 app.get("/", (req, res) => {
@@ -82,8 +69,6 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/notifications", notificationRoutes);
-
-// ✅ Chatbot route (correct place)
 app.use("/api/chat", chatRoutes);
 
 // ---------------- Error Handling ----------------
@@ -93,14 +78,7 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-
-  if (err.message && err.message.includes("CORS")) {
-    return res.status(403).json({ message: err.message });
-  }
-
-  res.status(err.status || 500).json({
-    message: err.message || "Internal Server Error"
-  });
+  res.status(500).json({ message: err.message || "Internal Server Error" });
 });
 
 // ---------------- Server ----------------
