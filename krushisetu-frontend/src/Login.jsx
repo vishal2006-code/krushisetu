@@ -82,6 +82,8 @@ function Login() {
             <h1 className="mt-5 max-w-lg text-5xl font-black leading-tight">
               Fresh produce meets local trust.
             </h1>
+
+            hello
             <p className="mt-6 max-w-xl text-base leading-7 text-emerald-50/90">
               Farmers manage crops, customers place direct orders, and the platform keeps everything organized in one shared dashboard.
             </p>

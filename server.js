@@ -1,7 +1,6 @@
 ﻿require("dotenv").config();
 
 const express = require("express");
-const cors = require("cors");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 
@@ -32,36 +31,35 @@ const defaultAllowedOrigins = [
 
 const envAllowedOrigins = (process.env.CORS_ORIGINS || "")
   .split(",")
-  .map((origin) => origin.trim())
+  .map((origin) => origin.trim().replace(/\/$/, ""))
   .filter(Boolean);
 
 const allowedOrigins = [...new Set([...defaultAllowedOrigins, ...envAllowedOrigins])];
 
-const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow non-browser clients and same-origin calls
-    if (!origin) {
-      return callback(null, true);
-    }
+function isAllowedOrigin(origin) {
+  if (!origin) return true;
+  const normalized = String(origin).trim().replace(/\/$/, "");
+  if (allowedOrigins.includes(normalized)) return true;
+  return /^https:\/\/.*\.vercel\.app$/i.test(normalized);
+}
 
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
+app.use((req, res, next) => {
+  const requestOrigin = req.headers.origin;
 
-    // Allow Vercel preview deployments
-    if (/^https:\/\/.*\.vercel\.app$/i.test(origin)) {
-      return callback(null, true);
-    }
+  if (isAllowedOrigin(requestOrigin)) {
+    res.header("Access-Control-Allow-Origin", requestOrigin || "*");
+    res.header("Vary", "Origin");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  }
 
-    return callback(new Error(`CORS blocked for origin: ${origin}`));
-  },
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-};
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
 
-app.use(cors(corsOptions));
-app.options("/{*splat}", cors(corsOptions)); // Express 5-compatible preflight wildcard
+  return next();
+});
 
 // ---------------- Middleware ----------------
 app.use(express.json({ limit: "10mb" }));
