@@ -38,7 +38,33 @@ const orderSchema = new mongoose.Schema(
     type: String,
     enum: ["pending", "paid"],
     default: "pending"
-  }
+  },
+
+  cancelReason: String,
+  cancellationReason: String,
+  cancelledAt: Date,
+  refundAmount: Number,
+  refundStatus: {
+    type: String,
+    enum: ["pending", "processed"],
+    default: "pending"
+  },
+  
+  trackingTimeline: [
+    {
+      status: String,
+      timestamp: {
+        type: Date,
+        default: Date.now
+      },
+      notes: String
+    }
+  ],
+  
+  estimatedDelivery: Date,
+  actualDelivery: Date,
+  deliveryAddress: String,
+  notes: String
 
 },
 { timestamps: true }

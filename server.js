@@ -1,6 +1,7 @@
 ﻿require("dotenv").config();
 
 const express = require("express");
+const cors = require("cors");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 
@@ -17,49 +18,13 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 
 const app = express();
-app.set("trust proxy", 1);
 
 // ---------------- DB ----------------
 connectDB();
 
-// ---------------- CORS (FINAL FIX) ----------------
-const defaultAllowedOrigins = [
-  "http://localhost:5173",
-  "https://krushisetu.vercel.app",
-  process.env.FRONTEND_URL
-].filter(Boolean);
-
-const envAllowedOrigins = (process.env.CORS_ORIGINS || "")
-  .split(",")
-  .map((origin) => origin.trim().replace(/\/$/, ""))
-  .filter(Boolean);
-
-const allowedOrigins = [...new Set([...defaultAllowedOrigins, ...envAllowedOrigins])];
-
-function isAllowedOrigin(origin) {
-  if (!origin) return true;
-  const normalized = String(origin).trim().replace(/\/$/, "");
-  if (allowedOrigins.includes(normalized)) return true;
-  return /^https:\/\/.*\.vercel\.app$/i.test(normalized);
-}
-
-app.use((req, res, next) => {
-  const requestOrigin = req.headers.origin;
-
-  if (isAllowedOrigin(requestOrigin)) {
-    res.header("Access-Control-Allow-Origin", requestOrigin || "*");
-    res.header("Vary", "Origin");
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
-  }
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
-  }
-
-  return next();
-});
+// ---------------- CORS ----------------
+app.use(cors());
+app.options(/.*/, cors());
 
 // ---------------- Middleware ----------------
 app.use(express.json({ limit: "10mb" }));
