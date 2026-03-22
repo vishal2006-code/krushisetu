@@ -1,11 +1,5 @@
-import { createContext, useEffect, useMemo, useState } from "react";
-
-export const ThemeContext = createContext({
-  theme: "light",
-  toggleTheme: () => {},
-  setTheme: () => {},
-  isDark: false
-});
+import { useEffect, useMemo, useState } from "react";
+import { ThemeContext } from "./themeContextValue";
 
 const STORAGE_KEY = "krushisetu-theme";
 

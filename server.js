@@ -31,7 +31,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // ✅ preflight fix
+app.options("/{*splat}", cors(corsOptions)); // Express 5-compatible preflight wildcard
 
 // ---------------- Middleware ----------------
 app.use(express.json({ limit: "10mb" }));
