@@ -74,7 +74,7 @@ function Login() {
       <div className="floating-orb left-[8%] top-[12%] h-28 w-28 bg-emerald-300/30" />
       <div className="floating-orb bottom-[16%] right-[10%] h-36 w-36 bg-cyan-300/20" />
       <div className="floating-orb right-[26%] top-[20%] h-20 w-20 bg-yellow-200/20" />
-hello
+
       <div className="grid w-full max-w-6xl gap-8 lg:grid-cols-[1.05fr_0.95fr]">
         <section className="animate-enter hidden rounded-[36px] border border-white/10 bg-white/8 p-10 text-white shadow-[0_30px_100px_rgba(0,0,0,0.28)] backdrop-blur-xl lg:flex lg:flex-col lg:justify-between">
           <div>
@@ -83,7 +83,7 @@ hello
               Fresh produce meets local trust.
             </h1>
             <p className="mt-6 max-w-xl text-base leading-7 text-emerald-50/90">
-              Farmers manage crops, customers place direct orders, and the platform keeps everything organized in one shared dashboard.
+              {/* Farmers manage crops, customers place direct orders, and the platform keeps everything organized in one shared dashboard. */}
             </p>
           </div>
 
