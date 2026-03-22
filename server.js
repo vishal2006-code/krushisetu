@@ -22,25 +22,16 @@ const app = express();
 // ---------------- DB ----------------
 connectDB();
 
-// ---------------- CORS FIX ----------------
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://127.0.0.1:5173",
-  "http://127.0.0.1:5174",
-  "https://krushisetu.vercel.app" // ✅ your frontend
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS not allowed"));
-    }
-  },
+// ---------------- CORS (FINAL FIX) ----------------
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://krushisetu.vercel.app"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // ✅ preflight fix
 
 // ---------------- Middleware ----------------
 app.use(express.json({ limit: "10mb" }));
