@@ -18,13 +18,43 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 
 const app = express();
+app.set("trust proxy", 1);
 
 // ---------------- DB ----------------
 connectDB();
 
 // ---------------- CORS (FINAL FIX) ----------------
+const defaultAllowedOrigins = [
+  "http://localhost:5173",
+  "https://krushisetu.vercel.app",
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
+const envAllowedOrigins = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const allowedOrigins = [...new Set([...defaultAllowedOrigins, ...envAllowedOrigins])];
+
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://krushisetu.vercel.app"],
+  origin: (origin, callback) => {
+    // Allow non-browser clients and same-origin calls
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow Vercel preview deployments
+    if (/^https:\/\/.*\.vercel\.app$/i.test(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
