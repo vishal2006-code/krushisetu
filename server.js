@@ -22,18 +22,11 @@ const app = express();
 // ---------------- DB ----------------
 connectDB();
 
-// ---------------- CORS FIX ----------------
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "*");
-  res.header("Access-Control-Allow-Methods", "*");
-  next();
-});
-
-// handle preflight
-app.options("*", (req, res) => {
-  res.sendStatus(200);
-});
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 // ---------------- Middleware ----------------
 app.use(express.json());
