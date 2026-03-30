@@ -2,11 +2,10 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/useAuth";
+import { API_URL } from "./lib/api";
 import { getVegetableIcon } from "./utils/vegetableIcons";
 import { formatINR } from "./utils/formatters";
 import Chatbot from "./components/Chatbot";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 function FarmerDashboard() {
   const [orders, setOrders] = useState([]);

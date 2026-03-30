@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useAuth } from "./context/useAuth";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+import { API_URL } from "./lib/api";
 
 function Reviews({ farmerId, onReviewAdded }) {
   const [reviews, setReviews] = useState([]);
