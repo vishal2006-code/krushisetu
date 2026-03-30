@@ -18,6 +18,7 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 
 const app = express();
+app.set("trust proxy", 1);
 
 // ---------------- Middleware ----------------
 app.use(cors({
