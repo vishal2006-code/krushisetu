@@ -5,31 +5,28 @@ const generateToken = require("../utils/generateToken");
 
 exports.registerUser = async (req, res) => {
   try {
-    // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ 
-        message: "Validation failed", 
-        errors: errors.array() 
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: errors.array()
       });
     }
 
     const { name, email, phone, password, role, city, village, latitude, longitude } = req.body;
 
-    // १. फोन नंबर चेक करा (स्कीमामध्ये तो 'required' आहे)
     if (!phone) {
-      return res.status(400).json({ message: "कृपया फोन नंबर द्या!" });
+      return res.status(400).json({ message: "Please provide a phone number." });
     }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: "हा ईमेल आधीच रजिस्टर आहे!" });
+      return res.status(400).json({ message: "This email is already registered." });
     }
 
-    // फोन नंबर आधीच आहे का तेही तपासा (unique: true मुळे)
     const phoneExists = await User.findOne({ phone });
     if (phoneExists) {
-      return res.status(400).json({ message: "हा फोन नंबर आधीच वापरला गेला आहे!" });
+      return res.status(400).json({ message: "This phone number is already in use." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -37,7 +34,7 @@ exports.registerUser = async (req, res) => {
     const user = await User.create({
       name,
       email,
-      phone, // फ्रंटएंडवरून येणे गरजेचे आहे
+      phone,
       password: hashedPassword,
       role: role.toLowerCase(),
       city,
@@ -56,7 +53,6 @@ exports.registerUser = async (req, res) => {
         role: user.role
       }
     });
-
   } catch (error) {
     console.error("Register Error:", error.message);
     res.status(500).json({ message: error.message });
@@ -67,11 +63,15 @@ exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    
-    if (!user) return res.status(400).json({ message: "ईमेल किंवा पासवर्ड चुकीचा आहे!" });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password." });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "ईमेल किंवा पासवर्ड चुकीचा आहे!" });
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password." });
+    }
 
     res.status(200).json({
       message: "Login successful",
@@ -117,7 +117,6 @@ exports.updateProfile = async (req, res) => {
         village: user.village
       }
     });
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

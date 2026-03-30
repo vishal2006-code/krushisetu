@@ -1,6 +1,4 @@
-﻿if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}require("dotenv").config();
+require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
@@ -32,7 +30,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
-// Rate limiter
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100
@@ -67,19 +64,24 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message || "Internal Server Error" });
 });
 
-// ---------------- Server Start (IMPORTANT FIX) ----------------
 const PORT = process.env.PORT || 5000;
+const requiredEnvVars = ["MONGO_URI", "JWT_SECRET"];
 
 const startServer = async () => {
   try {
-    await connectDB(); // 🔥 wait for DB
+    const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
+
+    if (missingEnvVars.length) {
+      throw new Error(`Missing required environment variables: ${missingEnvVars.join(", ")}`);
+    }
+
+    await connectDB();
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`);
     });
-
   } catch (error) {
-    console.error("❌ Server start failed:", error);
+    console.error("Server start failed:", error.message);
     process.exit(1);
   }
 };
