@@ -1,0 +1,1262 @@
+[dotenv@17.3.1] injecting env (6) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+Rate limit: development mode (disabled) — no 429 on heavy local refresh
+MongoDB connected successfully
+Server running on http://localhost:5000
+DECODED: {
+  id: '69a10c933bc809c811fddbd5',
+  role: 'farmer',
+  iat: 1775035080,
+  exp: 1775639880
+}
+[0mGET /api/health [32m200[0m 2.142 ms - 15[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775035080,
+  exp: 1775639880
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 1
+[0mGET /api/orders/farmer [32m200[0m 104.682 ms - 637[0m
+[0mGET /api/orders/customer [32m200[0m 84.203 ms - 33869[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775036172,
+  exp: 1775640972
+}
+[0mGET /api/orders/customer [32m200[0m 54.253 ms - 33869[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775036172,
+  exp: 1775640972
+}
+[0mGET /api/orders/customer [36m304[0m 81.788 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 7.057 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.878 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775036172,
+  exp: 1775640972
+}
+[0mGET /api/orders/customer [36m304[0m 29.646 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775036172,
+  exp: 1775640972
+}
+[0mGET /api/orders/customer [36m304[0m 30.885 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775036172,
+  exp: 1775640972
+}
+[0mGET /api/favorites [36m304[0m 8.807 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775036172,
+  exp: 1775640972
+}
+[0mGET /api/favorites [36m304[0m 5.935 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775036172,
+  exp: 1775640972
+}
+[0mGET /api/notifications [36m304[0m 25.490 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775036172,
+  exp: 1775640972
+}
+[0mGET /api/notifications [36m304[0m 11.195 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775036172,
+  exp: 1775640972
+}
+[0mGET /api/auth/me [36m304[0m 4.808 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775036172,
+  exp: 1775640972
+}
+[0mGET /api/auth/me [36m304[0m 3.672 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 6.117 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 6.152 ms - -[0m
+[0mPOST /api/auth/login [32m200[0m 95.627 ms - 346[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [32m200[0m 18.953 ms - 2908[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 15.787 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.948 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.033 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 14.843 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 13.957 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mPUT /api/orders/69cccfc5fe3d54b9c58c418f/items/69cccfc5fe3d54b9c58c4190/status [32m200[0m 36.536 ms - 870[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [32m200[0m 50.141 ms - 3087[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 21.388 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.428 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.857 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/orders/farmer/analytics [32m200[0m 6.897 ms - 136[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 5.015 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 15.114 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 13.909 ms - -[0m
+[0mPOST /api/chat [32m200[0m 2610.327 ms - 302[0m
+[0mPOST /api/chat [32m200[0m 4816.094 ms - 465[0m
+[0mPOST /api/chat [32m200[0m 7471.769 ms - 3914[0m
+[0mPOST /api/chat [32m200[0m 5827.958 ms - 1194[0m
+[0mPOST /api/chat [32m200[0m 2577.138 ms - 203[0m
+[0mPOST /api/chat [32m200[0m 2949.883 ms - 504[0m
+[0mPOST /api/chat [32m200[0m 2440.654 ms - 357[0m
+[0mGET /api/vegetables [36m304[0m 10.226 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 10.189 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/auth/me [32m200[0m 2.986 ms - 377[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/auth/me [36m304[0m 11.327 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/farmers/profile/me [32m200[0m 24.001 ms - 758[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/farmers/profile/me [36m304[0m 15.377 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+(node:34168) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[0mPUT /api/auth/me [32m200[0m 21.595 ms - 211[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 20.977 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 15.317 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 6.250 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.230 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 14.055 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 17.759 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.417 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 6.642 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 6.681 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 5.762 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/auth/me [32m200[0m 2.490 ms - 377[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/auth/me [36m304[0m 4.095 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/farmers/profile/me [36m304[0m 9.233 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/farmers/profile/me [36m304[0m 9.139 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 7.143 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 5.446 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.814 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.278 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 20.505 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 17.939 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.519 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.625 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 6.601 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 5.150 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.228 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.845 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 12.628 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 11.820 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.987 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.196 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 10.268 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 12.021 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 9.554 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 8.679 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 6.468 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 6.308 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 13.400 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775036726,
+  exp: 1775641526
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 10.404 ms - -[0m
+[0mPOST /api/auth/login [32m200[0m 100.838 ms - 346[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038517,
+  exp: 1775643317
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 16.516 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038517,
+  exp: 1775643317
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 13.361 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.098 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.404 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038517,
+  exp: 1775643317
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 7.891 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038517,
+  exp: 1775643317
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 6.063 ms - -[0m
+[0mPOST /api/auth/login [32m200[0m 87.300 ms - 336[0m
+[0mGET /api/vegetables [36m304[0m 4.665 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.205 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 31.365 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 25.881 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 6.191 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 5.250 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 24.123 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 23.574 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 7.919 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.126 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 11.794 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 8.112 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/notifications [36m304[0m 16.766 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/notifications [36m304[0m 12.733 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/auth/me [32m200[0m 2.688 ms - 347[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/auth/me [36m304[0m 3.239 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/notifications [36m304[0m 17.150 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/notifications [36m304[0m 15.002 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 5.746 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 5.316 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 31.060 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 28.263 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.439 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 6.214 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 28.070 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 22.008 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 4.021 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 5.334 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 22.991 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 21.853 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.600 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.429 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 6.938 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 6.846 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/notifications [36m304[0m 10.149 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/notifications [36m304[0m 9.627 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 7.806 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/favorites [36m304[0m 5.177 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 37.007 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/orders/customer [36m304[0m 28.376 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.907 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 8.435 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/auth/me [36m304[0m 5.302 ms - -[0m
+DECODED: {
+  id: '69a2a9a73911fdb85cbfb808',
+  role: 'customer',
+  iat: 1775038534,
+  exp: 1775643334
+}
+[0mGET /api/auth/me [36m304[0m 4.244 ms - -[0m
+[0mPOST /api/auth/login [32m200[0m 90.330 ms - 346[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 14.740 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 12.750 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 7.773 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 7.965 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 5.428 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 5.664 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/auth/me [32m200[0m 3.191 ms - 377[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/auth/me [36m304[0m 3.108 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/farmers/profile/me [36m304[0m 9.449 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/farmers/profile/me [36m304[0m 8.359 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 7.256 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 6.776 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.640 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.270 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 4.564 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 5.449 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/auth/me [36m304[0m 2.951 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/auth/me [36m304[0m 2.655 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/farmers/profile/me [36m304[0m 8.769 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/farmers/profile/me [36m304[0m 9.069 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 14.473 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 6.288 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.985 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.241 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 6.467 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+[0mGET /api/orders/farmer/analytics [36m304[0m 4.736 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.986 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.302 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 13.872 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 17.406 ms - -[0m
+[0mPOST /api/chat [32m200[0m 1865.663 ms - 394[0m
+[0mGET / [32m200[0m 1.596 ms - 39[0m
+[0mGET /favicon.ico [33m404[0m 0.369 ms - 29[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 61.964 ms - -[0m
+DECODED: {
+  id: '69be70dd86735b0dd7993ba6',
+  role: 'farmer',
+  iat: 1775038595,
+  exp: 1775643395
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 4
+[0mGET /api/orders/farmer [36m304[0m 11.090 ms - -[0m
+[0mPOST /api/auth/register [32m201[0m 189.894 ms - 337[0m
+DECODED: {
+  id: '69ccfd091acdeeea53fdc0ca',
+  role: 'farmer',
+  iat: 1775041801,
+  exp: 1775646601
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [32m200[0m 7.732 ms - 2[0m
+DECODED: {
+  id: '69ccfd091acdeeea53fdc0ca',
+  role: 'farmer',
+  iat: 1775041801,
+  exp: 1775646601
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 4.628 ms - -[0m
+[0mPOST /api/auth/register [32m201[0m 92.509 ms - 337[0m
+DECODED: {
+  id: '69ccfd381acdeeea53fdc0d2',
+  role: 'farmer',
+  iat: 1775041848,
+  exp: 1775646648
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 5.143 ms - -[0m
+DECODED: {
+  id: '69ccfd381acdeeea53fdc0d2',
+  role: 'farmer',
+  iat: 1775041848,
+  exp: 1775646648
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 5.258 ms - -[0m
+[0mPOST /api/auth/register [32m201[0m 105.506 ms - 337[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775041898,
+  exp: 1775646698
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 6.087 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775041898,
+  exp: 1775646698
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 5.029 ms - -[0m
+[0mPOST /api/auth/login [32m200[0m 92.967 ms - 325[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 6.282 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 5.475 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 7.559 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.650 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.636 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 3.226 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 6.569 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 9.065 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.564 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 6.361 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 40.906 ms - 565[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 8.633 ms - 565[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 5.153 ms - 565[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 5.058 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 4.490 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 5.276 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 6.720 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 6.556 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 6.190 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 7.878 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.708 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 10.127 ms - 565[0m
+[0mGET /api/vegetables [36m304[0m 4.124 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.501 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 7.941 ms - 565[0m
+[0mGET /api/vegetables [36m304[0m 5.040 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 4.644 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 6.819 ms - 375[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 6.090 ms - 375[0m
+[0mGET /api/vegetables [36m304[0m 4.771 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.280 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 6.700 ms - 641[0m
+[0mGET /api/vegetables [36m304[0m 6.674 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 7.516 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 9.819 ms - 527[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 7.503 ms - 527[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 6.655 ms - 527[0m
+[0mGET /api/vegetables [36m304[0m 5.450 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.915 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 8.740 ms - 489[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 8.927 ms - 489[0m
+[0mGET / [36m304[0m 0.465 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 7.776 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 12.191 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.081 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.610 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 5.400 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 4.595 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.662 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.393 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 7.337 ms - 565[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 7.897 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+🔥 API HIT /api/orders/farmer
+✅ Orders fetched: 0
+[0mGET /api/orders/farmer [36m304[0m 5.625 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 7.516 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.492 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 9.033 ms - 489[0m
+[0mGET /api/vegetables [36m304[0m 5.974 ms - -[0m
+[0mGET /api/vegetables [36m304[0m 5.215 ms - -[0m
+DECODED: {
+  id: '69ccfd6a1acdeeea53fdc0da',
+  role: 'farmer',
+  iat: 1775042321,
+  exp: 1775647121
+}
+[0mPOST /api/farmers/profile [31m500[0m 7.842 ms - 489[0m

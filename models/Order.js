@@ -8,15 +8,15 @@ const orderSchema = new mongoose.Schema(
     required: true
   },
 
+  // Legacy single-item order fields kept for backward compatibility with
+  // older documents that predate the `orderItems` structure.
   vegetable: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Vegetable",
-    required: true
+    ref: "Vegetable"
   },
 
   quantity: {
-    type: Number,
-    required: true
+    type: Number
   },
 
   assignedFarmer: {
@@ -24,13 +24,46 @@ const orderSchema = new mongoose.Schema(
     ref: "User"
   },
 
+  orderItems: [
+    {
+      vegetable: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Vegetable",
+        required: true
+      },
+      farmer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+      },
+      quantity: {
+        type: Number,
+        required: true
+      },
+      status: {
+        type: String,
+        enum: ["assigned", "accepted", "sent_to_hub", "collected_at_hub"],
+        default: "assigned"
+      },
+      price: {
+        type: Number,
+        required: true
+      }
+    }
+  ],
+
   totalAmount: {
-    type: Number
+    type: Number,
+    required: true
+  },
+
+  deliveryCharge: {
+    type: Number,
+    default: 0
   },
 
   status: {
     type: String,
-    enum: ["placed", "accepted", "delivered", "cancelled"],
+    enum: ["placed", "assigned_to_farmers", "sent_to_hub", "collected_at_hub", "out_for_delivery", "delivered", "cancelled"],
     default: "placed"
   },
 
@@ -40,16 +73,14 @@ const orderSchema = new mongoose.Schema(
     default: "pending"
   },
 
-  cancelReason: String,
-  cancellationReason: String,
-  cancelledAt: Date,
-  refundAmount: Number,
-  refundStatus: {
+  deliveryAddress: {
     type: String,
-    enum: ["pending", "processed"],
-    default: "pending"
+    required: true
   },
-  
+
+  estimatedDelivery: Date,
+  actualDelivery: Date,
+
   trackingTimeline: [
     {
       status: String,
@@ -60,11 +91,16 @@ const orderSchema = new mongoose.Schema(
       notes: String
     }
   ],
-  
-  estimatedDelivery: Date,
-  actualDelivery: Date,
-  deliveryAddress: String,
-  notes: String
+
+  notes: String,
+  cancelReason: String,
+  cancelledAt: Date,
+  refundAmount: Number,
+  refundStatus: {
+    type: String,
+    enum: ["pending", "processed"],
+    default: "pending"
+  }
 
 },
 { timestamps: true }

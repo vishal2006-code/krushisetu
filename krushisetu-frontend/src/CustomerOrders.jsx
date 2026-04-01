@@ -8,8 +8,11 @@ import { formatINR, toSafeNumber } from "./utils/formatters";
 
 const orderStatusStyles = {
   placed: "border-amber-200 bg-amber-50 text-amber-700",
-  accepted: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  delivered: "border-cyan-200 bg-cyan-50 text-cyan-700",
+  assigned_to_farmers: "border-blue-200 bg-blue-50 text-blue-700",
+  sent_to_hub: "border-purple-200 bg-purple-50 text-purple-700",
+  collected_at_hub: "border-indigo-200 bg-indigo-50 text-indigo-700",
+  out_for_delivery: "border-orange-200 bg-orange-50 text-orange-700",
+  delivered: "border-emerald-200 bg-emerald-50 text-emerald-700",
   cancelled: "border-rose-200 bg-rose-50 text-rose-700"
 };
 
@@ -110,9 +113,7 @@ function CustomerOrders() {
     const totalOrders = orders.length;
     const pendingPayments = orders.filter((order) => (order.paymentStatus || "pending") !== "paid").length;
     const grandTotal = orders.reduce((sum, order) => {
-      const unitPrice = toSafeNumber(order.vegetable?.price);
-      const quantity = toSafeNumber(order.quantity);
-      return sum + unitPrice * quantity;
+      return sum + toSafeNumber(order.totalAmount);
     }, 0);
 
     return { totalOrders, pendingPayments, grandTotal };
@@ -213,12 +214,8 @@ function CustomerOrders() {
         ) : (
           <section className="space-y-4">
             {orders.map((order, index) => {
-              const unitPrice = toSafeNumber(order.vegetable?.price);
-              const quantity = toSafeNumber(order.quantity);
-              const calculatedTotal = unitPrice * quantity;
               const orderStatus = (order.status || "placed").toLowerCase();
               const paymentStatus = (order.paymentStatus || "pending").toLowerCase();
-              const isFarmerAssigned = Boolean(order.assignedFarmer?.name);
 
               return (
                 <article
@@ -227,44 +224,55 @@ function CustomerOrders() {
                 >
                   <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                     <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-3xl shadow-sm">
-                          {getVegetableIcon(order.vegetable?.name, order.vegetable?.emoji)}
-                        </div>
-                        <div className="min-w-0">
-                          <h3 className="truncate text-2xl font-black text-slate-900">{order.vegetable?.name || "Unknown Product"}</h3>
-                          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
-                            {quantity} kg x {formatINR(unitPrice)} / kg
-                          </p>
-                        </div>
+                      <div className="flex flex-wrap items-center gap-3 mb-4">
+                        <h3 className="text-2xl font-black text-slate-900">Order #{order._id.slice(-6)}</h3>
                         <span
-                          className={`ml-auto inline-flex rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.12em] ${orderStatusStyles[orderStatus] || "border-slate-200 bg-slate-50 text-slate-700"}`}
+                          className={`inline-flex rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.12em] ${orderStatusStyles[orderStatus] || "border-slate-200 bg-slate-50 text-slate-700"}`}
                         >
                           {formatLabel(orderStatus, "Placed")}
                         </span>
                       </div>
 
-                      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                        <div
-                          className={`rounded-2xl border px-4 py-3 ${
-                            isFarmerAssigned
-                              ? "border-slate-200 bg-slate-50/70"
-                              : "border-amber-200 bg-amber-50"
-                          }`}
-                        >
-                          <p className="mb-1 flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-slate-500">
-                            <IconUser /> Farmer
-                          </p>
-                          <p className={`font-bold ${isFarmerAssigned ? "text-slate-800" : "text-amber-700"}`}>
-                            {isFarmerAssigned ? order.assignedFarmer.name : "Farmer not assigned yet"}
-                          </p>
-                        </div>
+                      <div className="space-y-3">
+                        {order.orderItems && order.orderItems.length > 0 ? (
+                          order.orderItems.map((item, itemIndex) => (
+                            <div key={item._id} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-xl">
+                                {getVegetableIcon(item.vegetable?.name, item.vegetable?.emoji)}
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-bold text-slate-900">{item.vegetable?.name}</p>
+                                <p className="text-sm text-slate-500">{item.quantity} kg x {formatINR(item.price)} = {formatINR(item.quantity * item.price)}</p>
+                                <p className="text-xs text-slate-400">Farmer: {item.farmer?.name || "Not assigned"} | Status: {formatLabel(item.status, "Assigned")}</p>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          // Fallback for old orders
+                          <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-xl">
+                              {getVegetableIcon(order.vegetable?.name, order.vegetable?.emoji)}
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-bold text-slate-900">{order.vegetable?.name || "Unknown Product"}</p>
+                              <p className="text-sm text-slate-500">{order.quantity} kg x {formatINR(order.vegetable?.price || 0)} = {formatINR((order.quantity || 0) * (order.vegetable?.price || 0))}</p>
+                              <p className="text-xs text-slate-400">Farmer: {order.assignedFarmer?.name || "Not assigned"} | Status: {formatLabel(order.status, "Placed")}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
 
+                      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                         <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3">
                           <p className="mb-1 flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-slate-500">
                             <IconCalendar /> Order Date
                           </p>
                           <p className="font-bold text-slate-800">{new Date(order.createdAt).toLocaleDateString("en-IN")}</p>
+                        </div>
+
+                        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3">
+                          <p className="mb-1 text-xs font-black uppercase tracking-[0.12em] text-slate-500">Delivery Address</p>
+                          <p className="font-bold text-slate-800 text-sm">{order.deliveryAddress}</p>
                         </div>
 
                         <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 sm:col-span-2 xl:col-span-1">
@@ -282,8 +290,8 @@ function CustomerOrders() {
 
                     <div className="w-full rounded-[24px] border border-emerald-100 bg-gradient-to-br from-emerald-50 to-cyan-50 p-5 lg:w-72">
                       <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">Order Total</p>
-                      <p className="mt-2 text-4xl font-black text-slate-900">{formatINR(calculatedTotal)}</p>
-                      <p className="mt-1 text-sm text-slate-500">Calculated as quantity x unit price</p>
+                      <p className="mt-2 text-4xl font-black text-slate-900">{formatINR(order.totalAmount)}</p>
+                      <p className="mt-1 text-sm text-slate-500">Includes delivery charge</p>
 
                       {paymentStatus !== "paid" ? (
                         <button

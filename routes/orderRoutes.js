@@ -6,7 +6,7 @@ const {
     placeOrder, 
     getFarmerOrders, 
     getCustomerOrders, 
-    updateOrderStatus, 
+    updateOrderItemStatus, 
     makePayment,
     cancelOrder,
     getFarmerAnalytics
@@ -24,6 +24,10 @@ router.put("/:orderId/pay", protect, authorizeRoles("customer"), makePayment);
 // --- Farmer Routes ---
 router.get("/farmer", protect, authorizeRoles("farmer"), getFarmerOrders);
 router.get("/farmer/analytics", protect, authorizeRoles("farmer"), getFarmerAnalytics);
-router.put("/:orderId/status", protect, authorizeRoles("farmer"), updateOrderStatus);
+router.put("/:orderId/items/:itemId/status", protect, authorizeRoles("farmer"), updateOrderItemStatus);
+
+// router.put("/:orderId/collect", collectAtHub);
+// router.put("/:orderId/out-for-delivery", outForDelivery);
+// router.put("/:orderId/deliver", deliverOrder);
 
 module.exports = router;

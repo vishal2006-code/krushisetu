@@ -33,9 +33,20 @@ app.use(morgan("dev"));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100
+  max: process.env.NODE_ENV === "development" ? 1000 : 100,
+  message: {
+    message: "Too many requests, please try again later. (rate limit)"
+  },
+  standardHeaders: true,
+  legacyHeaders: false
 });
-app.use(limiter);
+
+// In development, disable strict rate limiting so hot reload and rapid frontend polling do not break local dev.
+if (process.env.NODE_ENV === "development") {
+  console.log("Rate limit: development mode (disabled) — no 429 on heavy local refresh");
+} else {
+  app.use(limiter);
+}
 
 // ---------------- Routes ----------------
 app.get("/", (req, res) => {
@@ -62,7 +73,10 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: err.message || "Internal Server Error" });
+  res.status(500).json({
+    message: err.message || "Internal Server Error",
+    ...(process.env.NODE_ENV === "development" ? { stack: err.stack } : {})
+  });
 });
 
 const PORT = process.env.PORT || 5000;

@@ -7,6 +7,31 @@ import { getVegetableIcon } from "./utils/vegetableIcons";
 import { formatINR } from "./utils/formatters";
 import Chatbot from "./components/Chatbot";
 
+function getRelevantItems(order, farmerId) {
+  if (Array.isArray(order?.orderItems) && order.orderItems.length > 0) {
+    return order.orderItems.filter((item) => {
+      const itemFarmerId =
+        typeof item?.farmer === "string" ? item.farmer : item?.farmer?._id;
+      return !farmerId || itemFarmerId === farmerId;
+    });
+  }
+
+  if (order?.vegetable) {
+    return [
+      {
+        _id: `legacy-${order._id}`,
+        vegetable: order.vegetable,
+        quantity: order.quantity,
+        status: order.status,
+        farmer: order.assignedFarmer,
+        price: order.totalAmount
+      }
+    ];
+  }
+
+  return [];
+}
+
 function FarmerDashboard() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,39 +39,56 @@ function FarmerDashboard() {
   const navigate = useNavigate();
   const { user, token } = useAuth();
 
+  // ✅ FIXED useEffect (NO double call)
   useEffect(() => {
+    if (!token || !user || user.role !== "farmer") {
+      setLoading(false);
+      return;
+    }
+
     const fetchOrders = async () => {
       try {
         setError(null);
+
         const res = await axios.get(`${API_URL}/orders/farmer`, {
           headers: { Authorization: `Bearer ${token}` }
         });
+
+        console.log("ORDERS:", res.data); // debug
+
         setOrders(res.data || []);
-        setLoading(false);
       } catch (err) {
+        console.error("FETCH ERROR:", err);
         setError(err.response?.data?.message || "Failed to load orders");
+      } finally {
         setLoading(false);
       }
     };
-    fetchOrders();
-  }, [token]);
 
-  const updateStatus = async (orderId, newStatus) => {
+    fetchOrders();
+
+  }, [token]); // ❗ ONLY token (IMPORTANT)
+
+  const updateItemStatus = async (orderId, itemId, newStatus) => {
     try {
       await axios.put(
-        `${API_URL}/orders/${orderId}/status`,
+        `${API_URL}/orders/${orderId}/items/${itemId}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert(`Order ${newStatus} successfully updated!`);
-
-      // update UI without reload
       setOrders(prev =>
-        prev.map(order =>
-          order._id === orderId ? { ...order, status: newStatus } : order
-        )
+        prev.map(order => {
+          if (order._id === orderId) {
+            const updatedItems = (order.orderItems || []).map(item =>
+              item._id === itemId ? { ...item, status: newStatus } : item
+            );
+            return { ...order, orderItems: updatedItems };
+          }
+          return order;
+        })
       );
+
     } catch (err) {
       alert("Error updating status: " + err.message);
     }
@@ -87,7 +129,6 @@ function FarmerDashboard() {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-8">
       <div className="max-w-7xl mx-auto">
 
-        {/* Header */}
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-green-700 mb-2">
             Welcome, {user?.name}! 🌾
@@ -95,108 +136,78 @@ function FarmerDashboard() {
           <p className="text-gray-600">Manage your farm and orders</p>
         </div>
 
-        {/* Layout (Orders + Chatbot) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <h2 className="text-3xl font-bold text-gray-800 mb-8">📦 Orders</h2>
 
-          {/* LEFT SIDE (Main content) */}
-          <div className="lg:col-span-2">
+        {orders.length === 0 ? (
+          <div className="bg-white text-center py-20 rounded-lg shadow-md">
+            <div className="text-7xl mb-6">🌾</div>
+            <h3 className="text-2xl font-bold text-gray-600">No orders yet</h3>
+          </div>
+        ) : (
+          <div className="grid gap-6">
+            {orders.map((order) => {
+              const visibleItems = getRelevantItems(order, user?._id);
 
-            {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">📦 Listed Vegetables</h3>
-                <p className="text-3xl font-bold text-green-600">0</p>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">📋 Pending Orders</h3>
-                <p className="text-3xl font-bold text-blue-600">{orders.length}</p>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">💰 Total Earnings</h3>
-                <p className="text-3xl font-bold text-orange-600">{formatINR(0, 0)}</p>
-              </div>
-            </div>
-
-            {/* Action */}
-            <div className="mb-12">
-              <button
-                onClick={() => navigate("/farmer-profile")}
-                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition text-lg font-bold"
-              >
-                📝 Update Profile
-              </button>
-            </div>
-
-            {/* Orders Section */}
-            <h2 className="text-3xl font-bold text-gray-800 mb-8">📦 Orders</h2>
-
-            {orders.length === 0 ? (
-              <div className="bg-white text-center py-20 rounded-lg shadow-md">
-                <div className="text-7xl mb-6">🌾</div>
-                <h3 className="text-2xl font-bold text-gray-600">No orders yet</h3>
-                <p className="text-gray-500 mt-2">
-                  Keep your profile updated so customers can find you!
-                </p>
-              </div>
-            ) : (
-              <div className="grid gap-6">
-                {orders.map((order) => (
-                  <div
-                    key={order._id}
-                    className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500"
-                  >
-                    <div className="flex flex-col lg:flex-row justify-between gap-6">
-
-                      {/* Order Info */}
-                      <div className="flex gap-6">
-                        <div className="w-20 h-20 bg-green-100 rounded-lg flex items-center justify-center text-3xl">
-                          {getVegetableIcon(order.vegetable?.name, order.vegetable?.emoji)}
-                        </div>
-
-                        <div>
-                          <h3 className="text-2xl font-bold">
-                            {order.vegetable?.name || "Unknown"}
-                          </h3>
-                          <p>Customer: {order.customer?.name}</p>
-                          <p className="text-green-700 font-bold">
-                            {order.quantity} kg
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Action */}
-                      <div className="flex items-center gap-4">
-                        {order.status === "placed" ? (
-                          <button
-                            onClick={() => updateStatus(order._id, "accepted")}
-                            className="bg-green-600 text-white px-4 py-2 rounded"
-                          >
-                            Accept
-                          </button>
-                        ) : (
-                          <span className="text-green-600 font-bold">Accepted</span>
-                        )}
-                      </div>
-
-                    </div>
+              return (
+                <div
+                  key={order._id}
+                  className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500"
+                >
+                  <div className="mb-4">
+                    <h3 className="text-xl font-bold">Order #{order._id.slice(-6)}</h3>
+                    <p>Customer: {order.customer?.name || "Customer unavailable"}</p>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
 
-          {/* RIGHT SIDE (Chatbot) */}
-          <div className="bg-white rounded-lg shadow-md p-4 h-fit">
-            <Chatbot />
-          </div>
+                  <div className="space-y-4">
+                    {visibleItems.length > 0 ? visibleItems.map((item) => {
+                      const isLegacyItem = String(item._id || "").startsWith("legacy-");
+                      return (
+                        <div key={item._id} className="flex justify-between p-4 bg-gray-50 rounded-lg gap-4">
+                          <div className="flex gap-3">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-2xl">
+                              {getVegetableIcon(item.vegetable?.name, item.vegetable?.emoji)}
+                            </div>
+                            <div>
+                              <p className="font-bold">{item.vegetable?.name || "Unknown vegetable"}</p>
+                              <p>{item.quantity || 0} kg</p>
+                              <p>Status: {item.status || order.status}</p>
+                              {!isLegacyItem ? (
+                                <p className="text-sm text-gray-500">
+                                  Price: {formatINR((item.price || 0) * (item.quantity || 0))}
+                                </p>
+                              ) : null}
+                            </div>
+                          </div>
 
+                          {!isLegacyItem && item.status === "assigned" ? (
+                            <button
+                              onClick={() => updateItemStatus(order._id, item._id, "accepted")}
+                              className="bg-blue-600 text-white px-3 py-1 rounded h-fit"
+                            >
+                              Accept
+                            </button>
+                          ) : null}
+                        </div>
+                      );
+                    }) : (
+                      <div className="p-4 bg-gray-50 rounded-lg text-gray-500">
+                        No visible items for this order.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <div className="mt-8">
+          <Chatbot />
         </div>
+
       </div>
     </div>
   );
 }
 
 export default FarmerDashboard;
-
