@@ -11,7 +11,7 @@ const registerValidation = [
   body("email").isEmail().normalizeEmail().withMessage("Please provide a valid email"),
   body("phone").isMobilePhone().withMessage("Please provide a valid phone number"),
   body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
-  body("role").isIn(["customer", "farmer"]).withMessage("Role must be customer or farmer")
+  body("role").isIn(["customer", "farmer", "delivery_boy", "hub_manager"]).withMessage("Role must be customer, farmer, delivery_boy, or hub_manager")
 ];
 
 router.post("/register", registerValidation, registerUser);

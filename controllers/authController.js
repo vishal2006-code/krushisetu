@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const DeliveryBoy = require("../models/DeliveryBoy");
+const Hub = require("../models/Hub");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const generateToken = require("../utils/generateToken");
@@ -13,7 +15,14 @@ exports.registerUser = async (req, res) => {
       });
     }
 
-    const { name, email, phone, password, role, city, village, latitude, longitude } = req.body;
+    const { name, email, phone, password, role, city, village, latitude, longitude, coordinates, deliveryType } = req.body;
+    const fallbackCoordinates = [73.8567, 18.5204];
+    const safeCoordinates =
+      Array.isArray(coordinates) &&
+      coordinates.length === 2 &&
+      coordinates.every((value) => Number.isFinite(Number(value)))
+        ? [Number(coordinates[0]), Number(coordinates[1])]
+        : fallbackCoordinates;
 
     if (!phone) {
       return res.status(400).json({ message: "Please provide a phone number." });
@@ -30,22 +39,50 @@ exports.registerUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const normalizedRole = role.toLowerCase();
+    const normalizedDeliveryType = deliveryType === "delivery" ? "delivery" : "pickup";
 
     const user = await User.create({
       name,
       email,
       phone,
       password: hashedPassword,
-      role: role.toLowerCase(),
+      role: normalizedRole,
       city,
       village,
-      latitude: latitude || 0,
-      longitude: longitude || 0
+      latitude: Number(latitude) || safeCoordinates[1],
+      longitude: Number(longitude) || safeCoordinates[0]
     });
+
+    if (normalizedRole === "delivery_boy") {
+      await DeliveryBoy.create({
+        user: user._id,
+        name: user.name,
+        phone: user.phone,
+        type: normalizedDeliveryType,
+        isAvailable: true,
+        location: {
+          type: "Point",
+          coordinates: safeCoordinates
+        }
+      });
+    }
+
+    if (normalizedRole === "hub_manager") {
+      await Hub.create({
+        manager: user._id,
+        hubName: `${user.name}'s Center`,
+        name: `${user.name}'s Center`,
+        location: {
+          type: "Point",
+          coordinates: safeCoordinates
+        }
+      });
+    }
 
     res.status(201).json({
       message: "User registered successfully",
-      token: generateToken(user._id, user.role),
+      token: generateToken(user._id, normalizedRole),
       user: {
         _id: user._id,
         name: user.name,

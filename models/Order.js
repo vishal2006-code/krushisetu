@@ -8,8 +8,7 @@ const orderSchema = new mongoose.Schema(
     required: true
   },
 
-  // Legacy single-item order fields kept for backward compatibility with
-  // older documents that predate the `orderItems` structure.
+  // 🔹 Legacy fields (keep for compatibility)
   vegetable: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Vegetable"
@@ -24,6 +23,7 @@ const orderSchema = new mongoose.Schema(
     ref: "User"
   },
 
+  // 🔥 Multi-item order
   orderItems: [
     {
       vegetable: {
@@ -41,7 +41,12 @@ const orderSchema = new mongoose.Schema(
       },
       status: {
         type: String,
-        enum: ["assigned", "accepted", "sent_to_hub", "collected_at_hub"],
+        enum: [
+          "assigned",
+          "accepted",
+          "picked_from_farmer",
+          "arrived_at_hub"
+        ],
         default: "assigned"
       },
       price: {
@@ -61,9 +66,22 @@ const orderSchema = new mongoose.Schema(
     default: 0
   },
 
+  // 🔥 MAIN DELIVERY STATUS (UPDATED)
   status: {
     type: String,
-    enum: ["placed", "assigned_to_farmers", "sent_to_hub", "collected_at_hub", "out_for_delivery", "delivered", "cancelled"],
+    enum: [
+      "placed",
+      "pending_farmer_acceptance",
+      "accepted_by_farmer",
+      "pickup_assigned",
+      "picked_from_farmer",
+      "arrived_at_hub",
+      "packaged",
+      "delivery_assigned",
+      "out_for_delivery",
+      "delivered",
+      "cancelled"
+    ],
     default: "placed"
   },
 
@@ -78,9 +96,76 @@ const orderSchema = new mongoose.Schema(
     required: true
   },
 
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point"
+    },
+    coordinates: {
+      type: [Number]
+    }
+  },
+
+  // 🔥 DELIVERY SYSTEM FIELDS
+  hub: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Hub"
+  },
+
+  pickupBoy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "DeliveryBoy"
+  },
+
+  batchId: {
+    type: String,
+    index: true
+  },
+
+  deliveryBatchId: {
+    type: String,
+    index: true
+  },
+
+  batchMeta: {
+    groupedPickup: {
+      type: Boolean,
+      default: false
+    },
+    pickupTaskStatus: {
+      type: String,
+      enum: ["not_sent", "requested", "accepted"],
+      default: "not_sent"
+    },
+    pickupAcceptedAt: Date,
+    totalBatchQuantity: {
+      type: Number,
+      default: 0
+    },
+    farmerHandoverQuantity: {
+      type: Number,
+      default: 0
+    },
+    nearbyPickupNote: {
+      type: String,
+      default: ""
+    },
+    deliveryAreaLabel: {
+      type: String,
+      default: ""
+    }
+  },
+
+  deliveryBoy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "DeliveryBoy"
+  },
+
   estimatedDelivery: Date,
   actualDelivery: Date,
 
+  // 📊 Tracking system
   trackingTimeline: [
     {
       status: String,
@@ -93,8 +178,22 @@ const orderSchema = new mongoose.Schema(
   ],
 
   notes: String,
+
+  rating: {
+    type: Number,
+    min: 1,
+    max: 5
+  },
+
+  review: {
+    type: String,
+    trim: true,
+    maxlength: 500
+  },
+
   cancelReason: String,
   cancelledAt: Date,
+
   refundAmount: Number,
   refundStatus: {
     type: String,

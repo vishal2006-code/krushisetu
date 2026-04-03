@@ -44,9 +44,26 @@ export function AuthProvider({ children }) {
     setAuthToken(null);
   };
 
-  const register = async (name, email, phone, password, role = "customer", city = "", village = "") => {
+  const register = async (
+    name,
+    email,
+    phone,
+    password,
+    role = "customer",
+    city = "",
+    village = "",
+    coordinates = null,
+    deliveryType = "pickup"
+  ) => {
     setLoading(true);
     setError(null);
+
+    const safeCoordinates =
+      Array.isArray(coordinates) &&
+      coordinates.length === 2 &&
+      coordinates.every((value) => Number.isFinite(Number(value)))
+        ? [Number(coordinates[0]), Number(coordinates[1])]
+        : null;
 
     try {
       const response = await api.post("/auth/register", {
@@ -57,8 +74,10 @@ export function AuthProvider({ children }) {
         role: role.toLowerCase(),
         city,
         village,
-        latitude: 19.99,
-        longitude: 73.78
+        deliveryType,
+        latitude: safeCoordinates?.[1] ?? 19.99,
+        longitude: safeCoordinates?.[0] ?? 73.78,
+        coordinates: safeCoordinates
       });
 
       const { token: nextToken, user: nextUser } = response.data;

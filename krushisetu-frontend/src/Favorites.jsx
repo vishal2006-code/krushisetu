@@ -49,8 +49,10 @@ function Favorites() {
     return { totalItems, totalValue };
   }, [favorites]);
 
+  const getUnitLabel = (unit) => (unit === "quintal" ? "quintal" : "kg");
+
   if (!isAuthenticated) {
-    return <ErrorState title="Sign in required" message="Please log in to view your favorite vegetables." />;
+    return <ErrorState title="Sign in required" message="Please log in to view your favorite products." />;
   }
 
   if (loading) {
@@ -68,9 +70,9 @@ function Favorites() {
           <p className="text-sm font-black uppercase tracking-[0.35em] text-emerald-100">Favorites</p>
           <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="text-4xl font-black md:text-5xl">Saved vegetables you want to revisit.</h1>
+              <h1 className="text-4xl font-black md:text-5xl">Saved products you want to revisit.</h1>
               <p className="mt-3 max-w-2xl text-emerald-50/90">
-                Keep your best picks in one premium shelf so reordering feels fast and effortless.
+                Keep your best products in one premium shelf so reordering feels fast and effortless.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3 text-center">
@@ -95,7 +97,7 @@ function Favorites() {
         {favorites.length === 0 ? (
           <EmptyState
             title="No favorites yet"
-            subtitle="Start saving vegetables from the customer dashboard and they will appear here in your curated list."
+            subtitle="Start saving products from the customer dashboard and they will appear here in your curated list."
           />
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -116,7 +118,7 @@ function Favorites() {
                       </p>
                     </div>
                     <div className="rounded-full bg-emerald-50 px-4 py-2 text-sm font-black text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-                      {formatINR(favorite.vegetable?.price)}/kg
+                      {formatINR(favorite.vegetable?.price)}/{getUnitLabel(favorite.vegetable?.unit)}
                     </div>
                   </div>
 

@@ -4,6 +4,9 @@ import App from "./App.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import "./index.css";
 
+// 🔥 ADD THIS LINE
+import "leaflet/dist/leaflet.css";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider>

@@ -27,6 +27,16 @@ const farmerProfileSchema = new mongoose.Schema(
 
     village: {
       type: String
+    },
+
+    averageRating: {
+      type: Number,
+      default: 0
+    },
+
+    totalRatings: {
+      type: Number,
+      default: 0
     }
   },
   { timestamps: true }

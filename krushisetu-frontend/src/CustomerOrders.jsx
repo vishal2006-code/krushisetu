@@ -1,79 +1,116 @@
 ﻿import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api, { getErrorMessage } from "./lib/api";
+import OrderTracking from "./components/OrderTracking";
 import { useAuth } from "./context/useAuth";
-import { API_URL } from "./lib/api";
+import { formatINR } from "./utils/formatters";
 import { getVegetableIcon } from "./utils/vegetableIcons";
-import { formatINR, toSafeNumber } from "./utils/formatters";
 
 const orderStatusStyles = {
   placed: "border-amber-200 bg-amber-50 text-amber-700",
-  assigned_to_farmers: "border-blue-200 bg-blue-50 text-blue-700",
-  sent_to_hub: "border-purple-200 bg-purple-50 text-purple-700",
-  collected_at_hub: "border-indigo-200 bg-indigo-50 text-indigo-700",
+  pending_farmer_acceptance: "border-blue-200 bg-blue-50 text-blue-700",
+  accepted_by_farmer: "border-cyan-200 bg-cyan-50 text-cyan-700",
+  pickup_assigned: "border-indigo-200 bg-indigo-50 text-indigo-700",
+  picked_from_farmer: "border-violet-200 bg-violet-50 text-violet-700",
+  arrived_at_hub: "border-purple-200 bg-purple-50 text-purple-700",
+  packaged: "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700",
   out_for_delivery: "border-orange-200 bg-orange-50 text-orange-700",
   delivered: "border-emerald-200 bg-emerald-50 text-emerald-700",
   cancelled: "border-rose-200 bg-rose-50 text-rose-700"
 };
 
 const paymentStatusStyles = {
-  paid: "border-emerald-200 bg-emerald-50 text-emerald-700",
   pending: "border-amber-200 bg-amber-50 text-amber-700",
-  failed: "border-rose-200 bg-rose-50 text-rose-700",
-  refunded: "border-slate-200 bg-slate-100 text-slate-700"
+  paid: "border-emerald-200 bg-emerald-50 text-emerald-700"
 };
 
-function IconUser() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-      <circle cx="12" cy="8" r="3.5" />
-      <path d="M4.5 19.5c1.6-3.3 4.2-5 7.5-5s5.9 1.7 7.5 5" />
-    </svg>
-  );
-}
+function formatLabel(value, fallback = "Unknown") {
+  if (!value) {
+    return fallback;
+  }
 
-function IconCalendar() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-      <rect x="3.5" y="5" width="17" height="15" rx="2" />
-      <path d="M3.5 9.5h17M8 3.5v3M16 3.5v3" />
-    </svg>
-  );
-}
-
-function IconCreditCard() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-      <rect x="2.5" y="5.5" width="19" height="13" rx="2" />
-      <path d="M2.5 10h19M6.5 15h4" />
-    </svg>
-  );
-}
-
-function IconBag() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-9 w-9" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-      <path d="M6 8h12l-1 12H7L6 8z" />
-      <path d="M9 8V6a3 3 0 0 1 6 0v2" />
-    </svg>
-  );
-}
-
-function formatLabel(value, fallback) {
-  if (!value) return fallback;
   return value
     .toString()
     .replace(/_/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+function getOrderItems(order) {
+  if (Array.isArray(order?.orderItems) && order.orderItems.length > 0) {
+    return order.orderItems;
+  }
+
+  if (order?.vegetable) {
+    return [
+      {
+        _id: `legacy-${order._id}`,
+        vegetable: order.vegetable,
+        quantity: order.quantity || 0,
+        price: order.vegetable?.price || 0,
+        farmer: order.assignedFarmer,
+        status: order.status
+      }
+    ];
+  }
+
+  return [];
+}
+
+function getPrimaryItemLabel(orderItems) {
+  if (!orderItems.length) {
+    return "No items";
+  }
+
+  if (orderItems.length === 1) {
+    return orderItems[0].vegetable?.name || "Ordered item";
+  }
+
+  return `${orderItems[0].vegetable?.name || "Order"} +${orderItems.length - 1} more`;
+}
+
+function getUnitLabel(unit, quantity) {
+  const safeUnit = unit === "quintal" ? "quintal" : "kg";
+  const safeQuantity = Number(quantity) || 0;
+  if (safeQuantity === 1) {
+    return safeUnit;
+  }
+  return safeUnit === "quintal" ? "quintals" : "kg";
+}
+
+function SummaryPill({ label, value }) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-slate-50/90 px-3 py-2">
+      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">{label}</p>
+      <p className="mt-1 text-sm font-bold text-slate-800">{value}</p>
+    </div>
+  );
+}
+
+function EmptyState({ onBrowse }) {
+  return (
+    <section className="glass-card animate-enter-delay-1 text-center">
+      <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-50 text-4xl font-black text-emerald-600">
+        O
+      </div>
+      <h2 className="text-3xl font-black text-slate-900">No orders yet</h2>
+      <p className="mx-auto mt-2 max-w-xl text-slate-500">
+        Start shopping from the customer dashboard and your orders will appear here.
+      </p>
+      <button onClick={onBrowse} className="btn-primary mt-6">
+        Start Shopping
+      </button>
+    </section>
+  );
 }
 
 function CustomerOrders() {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [payingOrderId, setPayingOrderId] = useState("");
-  const navigate = useNavigate();
-  const { token, isAuthenticated } = useAuth();
+  const [expandedOrderId, setExpandedOrderId] = useState("");
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -81,69 +118,73 @@ function CustomerOrders() {
       return;
     }
 
-    let isActive = true;
+    let isMounted = true;
 
-    const fetchOrders = async () => {
+    async function fetchOrders() {
       try {
-        setError(null);
-        const res = await axios.get(`${API_URL}/orders/customer`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        setError("");
+        const response = await api.get("/orders/customer");
 
-        if (!isActive) return;
-        setOrders(Array.isArray(res.data) ? res.data : []);
-      } catch (err) {
-        if (!isActive) return;
-        setError(err.response?.data?.message || "Failed to load orders");
+        if (isMounted) {
+          const nextOrders = Array.isArray(response.data) ? response.data : [];
+          setOrders(nextOrders);
+          setExpandedOrderId((current) => current || nextOrders[0]?._id || "");
+        }
+      } catch (requestError) {
+        if (isMounted) {
+          setError(getErrorMessage(requestError, "Failed to load orders"));
+        }
       } finally {
-        if (isActive) {
+        if (isMounted) {
           setLoading(false);
         }
       }
-    };
+    }
 
     fetchOrders();
 
     return () => {
-      isActive = false;
+      isMounted = false;
     };
-  }, [token, isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate]);
 
   const summary = useMemo(() => {
-    const totalOrders = orders.length;
-    const pendingPayments = orders.filter((order) => (order.paymentStatus || "pending") !== "paid").length;
-    const grandTotal = orders.reduce((sum, order) => {
-      return sum + toSafeNumber(order.totalAmount);
-    }, 0);
-
-    return { totalOrders, pendingPayments, grandTotal };
+    return orders.reduce(
+      (accumulator, order) => {
+        accumulator.totalOrders += 1;
+        accumulator.totalValue += Number(order.totalAmount) || 0;
+        if ((order.paymentStatus || "pending") !== "paid") {
+          accumulator.pendingPayments += 1;
+        }
+        return accumulator;
+      },
+      { totalOrders: 0, totalValue: 0, pendingPayments: 0 }
+    );
   }, [orders]);
 
-  const handlePayNow = async (orderId) => {
+  async function handlePayNow(orderId) {
     try {
       setPayingOrderId(orderId);
-      await axios.put(
-        `${API_URL}/orders/${orderId}/pay`,
-        { paymentMethod: "manual", transactionId: Date.now().toString() },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.put(`/orders/${orderId}/pay`, {
+        paymentMethod: "manual",
+        transactionId: Date.now().toString()
+      });
 
-      setOrders((prev) =>
-        prev.map((order) =>
-          order._id === orderId
-            ? {
-                ...order,
-                paymentStatus: "paid"
-              }
-            : order
+      setOrders((previousOrders) =>
+        previousOrders.map((order) =>
+          order._id === orderId ? { ...order, paymentStatus: "paid" } : order
         )
       );
-    } catch (err) {
-      alert(err.response?.data?.message || "Payment failed");
+    } catch (requestError) {
+      window.alert(getErrorMessage(requestError, "Payment failed"));
     } finally {
       setPayingOrderId("");
     }
-  };
+  }
+
+  function toggleExpanded(orderId) {
+    setExpandedOrderId((current) => (current === orderId ? "" : orderId));
+  }
 
   if (loading) {
     return (
@@ -162,10 +203,7 @@ function CustomerOrders() {
         <div className="glass-card max-w-xl text-center">
           <p className="text-2xl font-black text-rose-700">Unable to load orders</p>
           <p className="mt-2 text-slate-600">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="btn-primary mt-6"
-          >
+          <button onClick={() => window.location.reload()} className="btn-primary mt-6">
             Try Again
           </button>
         </div>
@@ -175,14 +213,19 @@ function CustomerOrders() {
 
   return (
     <div className="page-shell">
-      <div className="mx-auto max-w-6xl space-y-8">
+      <div className="mx-auto max-w-6xl space-y-6">
         <section className="page-hero animate-enter">
-          <p className="text-sm font-black uppercase tracking-[0.35em] text-emerald-100">Orders</p>
+          <p className="text-sm font-black uppercase tracking-[0.35em] text-emerald-100">
+            Orders
+          </p>
           <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <h1 className="text-4xl font-black md:text-5xl">My Orders</h1>
-              <p className="mt-2 text-emerald-50/90">Track order progress, payment status, and assignment details in one place.</p>
+              <p className="mt-2 max-w-2xl text-emerald-50/90">
+                View orders in a compact list and expand any row for items, live processing, and delivery details.
+              </p>
             </div>
+
             <div className="grid grid-cols-3 gap-3 text-center">
               <div className="rounded-2xl bg-white/15 px-4 py-3 backdrop-blur">
                 <p className="text-2xl font-black">{summary.totalOrders}</p>
@@ -193,7 +236,7 @@ function CustomerOrders() {
                 <p className="text-xs uppercase tracking-[0.2em] text-emerald-100/80">Pending Pay</p>
               </div>
               <div className="rounded-2xl bg-white/15 px-4 py-3 backdrop-blur">
-                <p className="text-xl font-black">{formatINR(summary.grandTotal)}</p>
+                <p className="text-xl font-black">{formatINR(summary.totalValue)}</p>
                 <p className="text-xs uppercase tracking-[0.2em] text-emerald-100/80">Total Value</p>
               </div>
             </div>
@@ -201,111 +244,200 @@ function CustomerOrders() {
         </section>
 
         {orders.length === 0 ? (
-          <section className="glass-card animate-enter-delay-1 text-center">
-            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-50 text-emerald-600">
-              <IconBag />
-            </div>
-            <h2 className="text-3xl font-black text-slate-900">No orders yet</h2>
-            <p className="mx-auto mt-2 max-w-xl text-slate-500">Start shopping from the customer dashboard and your orders will appear here instantly.</p>
-            <button onClick={() => navigate("/customer-dashboard")} className="btn-primary mt-6">
-              Start Shopping
-            </button>
-          </section>
+          <EmptyState onBrowse={() => navigate("/customer-dashboard")} />
         ) : (
           <section className="space-y-4">
             {orders.map((order, index) => {
+              const orderItems = getOrderItems(order);
               const orderStatus = (order.status || "placed").toLowerCase();
               const paymentStatus = (order.paymentStatus || "pending").toLowerCase();
+              const isExpanded = expandedOrderId === order._id;
 
               return (
                 <article
                   key={order._id}
-                  className={`group rounded-[28px] border border-white/70 bg-white/90 p-6 shadow-[0_16px_50px_rgba(15,23,42,0.08)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_64px_rgba(15,23,42,0.14)] animate-enter-delay-${Math.min(index + 1, 3)}`}
+                  className={`overflow-hidden rounded-[30px] border border-white/70 bg-white/90 shadow-[0_18px_60px_rgba(15,23,42,0.08)] transition duration-300 animate-enter-delay-${Math.min(index + 1, 3)}`}
                 >
-                  <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-3 mb-4">
-                        <h3 className="text-2xl font-black text-slate-900">Order #{order._id.slice(-6)}</h3>
-                        <span
-                          className={`inline-flex rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.12em] ${orderStatusStyles[orderStatus] || "border-slate-200 bg-slate-50 text-slate-700"}`}
-                        >
-                          {formatLabel(orderStatus, "Placed")}
-                        </span>
-                      </div>
-
-                      <div className="space-y-3">
-                        {order.orderItems && order.orderItems.length > 0 ? (
-                          order.orderItems.map((item, itemIndex) => (
-                            <div key={item._id} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
-                              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-xl">
-                                {getVegetableIcon(item.vegetable?.name, item.vegetable?.emoji)}
-                              </div>
-                              <div className="flex-1">
-                                <p className="font-bold text-slate-900">{item.vegetable?.name}</p>
-                                <p className="text-sm text-slate-500">{item.quantity} kg x {formatINR(item.price)} = {formatINR(item.quantity * item.price)}</p>
-                                <p className="text-xs text-slate-400">Farmer: {item.farmer?.name || "Not assigned"} | Status: {formatLabel(item.status, "Assigned")}</p>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          // Fallback for old orders
-                          <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-xl">
-                              {getVegetableIcon(order.vegetable?.name, order.vegetable?.emoji)}
-                            </div>
-                            <div className="flex-1">
-                              <p className="font-bold text-slate-900">{order.vegetable?.name || "Unknown Product"}</p>
-                              <p className="text-sm text-slate-500">{order.quantity} kg x {formatINR(order.vegetable?.price || 0)} = {formatINR((order.quantity || 0) * (order.vegetable?.price || 0))}</p>
-                              <p className="text-xs text-slate-400">Farmer: {order.assignedFarmer?.name || "Not assigned"} | Status: {formatLabel(order.status, "Placed")}</p>
-                            </div>
+                  <button
+                    type="button"
+                    onClick={() => toggleExpanded(order._id)}
+                    className="w-full text-left"
+                  >
+                    <div className="flex flex-col gap-4 p-4 sm:p-5 lg:p-6">
+                      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-3">
+                            <h2 className="text-2xl font-black text-slate-900">
+                              Order #{order._id.slice(-6)}
+                            </h2>
+                            <span
+                              className={`inline-flex rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.12em] ${
+                                orderStatusStyles[orderStatus] ||
+                                "border-slate-200 bg-slate-50 text-slate-700"
+                              }`}
+                            >
+                              {formatLabel(orderStatus, "Placed")}
+                            </span>
+                            <span
+                              className={`inline-flex rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.12em] ${
+                                paymentStatusStyles[paymentStatus] ||
+                                "border-slate-200 bg-slate-50 text-slate-700"
+                              }`}
+                            >
+                              {paymentStatus === "paid" ? "Paid" : "Payment Pending"}
+                            </span>
                           </div>
-                        )}
+                          <p className="mt-2 text-sm font-semibold text-slate-600">
+                            {getPrimaryItemLabel(orderItems)}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-4 lg:min-w-[220px] lg:justify-end">
+                          <div className="text-right">
+                            <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
+                              Total
+                            </p>
+                            <p className="mt-1 text-2xl font-black text-slate-900">
+                              {formatINR(order.totalAmount || 0)}
+                            </p>
+                          </div>
+                          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-600">
+                            <span
+                              className={`text-lg font-black transition-transform duration-300 ${
+                                isExpanded ? "rotate-180" : ""
+                              }`}
+                            >
+                              v
+                            </span>
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3">
-                          <p className="mb-1 flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-slate-500">
-                            <IconCalendar /> Order Date
-                          </p>
-                          <p className="font-bold text-slate-800">{new Date(order.createdAt).toLocaleDateString("en-IN")}</p>
-                        </div>
-
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3">
-                          <p className="mb-1 text-xs font-black uppercase tracking-[0.12em] text-slate-500">Delivery Address</p>
-                          <p className="font-bold text-slate-800 text-sm">{order.deliveryAddress}</p>
-                        </div>
-
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 sm:col-span-2 xl:col-span-1">
-                          <p className="mb-1 flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-slate-500">
-                            <IconCreditCard /> Payment
-                          </p>
-                          <span
-                            className={`inline-flex rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.12em] ${paymentStatusStyles[paymentStatus] || "border-slate-200 bg-slate-50 text-slate-700"}`}
-                          >
-                            {formatLabel(paymentStatus, "Pending")}
-                          </span>
-                        </div>
+                      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                        <SummaryPill label="Items" value={`${orderItems.length}`} />
+                        <SummaryPill
+                          label="Ordered On"
+                          value={new Date(order.createdAt).toLocaleDateString("en-IN")}
+                        />
+                        <SummaryPill
+                          label="Delivery To"
+                          value={order.deliveryAddress || "Address unavailable"}
+                        />
+                        <SummaryPill
+                          label="Current Step"
+                          value={formatLabel(order.status, "Placed")}
+                        />
+                        <SummaryPill
+                          label="Action"
+                          value={isExpanded ? "Hide Details" : "View Details"}
+                        />
                       </div>
                     </div>
+                  </button>
 
-                    <div className="w-full rounded-[24px] border border-emerald-100 bg-gradient-to-br from-emerald-50 to-cyan-50 p-5 lg:w-72">
-                      <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">Order Total</p>
-                      <p className="mt-2 text-4xl font-black text-slate-900">{formatINR(order.totalAmount)}</p>
-                      <p className="mt-1 text-sm text-slate-500">Includes delivery charge</p>
+                  <div
+                    className={`grid transition-all duration-300 ease-out ${
+                      isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="border-t border-slate-200/80 bg-slate-50/55 px-4 py-4 sm:px-5 sm:py-5 lg:px-6">
+                      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+                        <div className="space-y-4">
+                          <section className="rounded-[26px] border border-slate-200 bg-white p-4 sm:p-5">
+                            <div className="flex items-center justify-between gap-3">
+                              <h3 className="text-sm font-black uppercase tracking-[0.2em] text-slate-500">
+                                Items Ordered
+                              </h3>
+                              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700">
+                                {orderItems.length} item{orderItems.length > 1 ? "s" : ""}
+                              </span>
+                            </div>
 
-                      {paymentStatus !== "paid" ? (
-                        <button
-                          onClick={() => handlePayNow(order._id)}
-                          disabled={payingOrderId === order._id}
-                          className="btn-primary mt-4 w-full disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                          {payingOrderId === order._id ? "Processing..." : "Pay Now"}
-                        </button>
-                      ) : (
-                        <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-center text-sm font-bold text-emerald-700">
-                          Payment completed successfully
+                            <div className="mt-4 space-y-3">
+                              {orderItems.map((item) => (
+                                <div
+                                  key={item._id}
+                                  className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:flex-row sm:items-center"
+                                >
+                                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-2xl">
+                                    {getVegetableIcon(item.vegetable?.name, item.vegetable?.emoji)}
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <p className="font-bold text-slate-900">
+                                      {item.vegetable?.name || "Unknown Product"}
+                                    </p>
+                                    <p className="mt-1 text-sm text-slate-600">
+                                      {item.quantity || 0}{" "}
+                                      {getUnitLabel(item.vegetable?.unit, item.quantity)} x{" "}
+                                      {formatINR(item.price || 0)} ={" "}
+                                      {formatINR((Number(item.quantity) || 0) * (Number(item.price) || 0))}
+                                    </p>
+                                    <p className="mt-1 break-words text-xs text-slate-500">
+                                      Farmer: {item.farmer?.name || "Not assigned"}
+                                    </p>
+                                  </div>
+                                  <span className="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-bold text-slate-600">
+                                    {formatLabel(item.status, "Assigned")}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </section>
+
+                          <section className="rounded-[26px] border border-slate-200 bg-white p-4 sm:p-5">
+                            <h3 className="text-sm font-black uppercase tracking-[0.2em] text-slate-500">
+                              Delivery Details
+                            </h3>
+
+                            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                              <SummaryPill
+                                label="Delivery To"
+                                value={order.deliveryAddress || "Address unavailable"}
+                              />
+                              <SummaryPill
+                                label="Payment"
+                                value={formatLabel(order.paymentStatus, "Pending")}
+                              />
+                              <SummaryPill
+                                label="Delivery Charge"
+                                value={formatINR(order.deliveryCharge || 0)}
+                              />
+                              <SummaryPill
+                                label="Delivered To"
+                                value={order.customer?.name || "Customer"}
+                              />
+                            </div>
+
+                            {paymentStatus !== "paid" ? (
+                              <button
+                                onClick={() => handlePayNow(order._id)}
+                                disabled={payingOrderId === order._id}
+                                className="btn-primary mt-4 w-full disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                              >
+                                {payingOrderId === order._id ? "Processing..." : "Pay Now"}
+                              </button>
+                            ) : (
+                              <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700">
+                                Payment completed successfully
+                              </div>
+                            )}
+                          </section>
                         </div>
-                      )}
+
+                        <section className="rounded-[26px] border border-slate-200 bg-white p-4 sm:p-5">
+                          <h3 className="text-sm font-black uppercase tracking-[0.2em] text-slate-500">
+                            Live Processing
+                          </h3>
+                          <p className="mt-2 text-sm text-slate-500">
+                            Follow the order from placement to delivery.
+                          </p>
+                          <div className="mt-4">
+                            <OrderTracking currentStatus={order.status} compact />
+                          </div>
+                        </section>
+                      </div>
+                    </div>
                     </div>
                   </div>
                 </article>

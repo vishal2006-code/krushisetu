@@ -1,6 +1,20 @@
-﻿import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/useAuth";
+
+function getRedirectPath(role) {
+  switch (role) {
+    case "farmer":
+      return "/farmer-dashboard";
+    case "delivery_boy":
+      return "/delivery-dashboard";
+    case "hub_manager":
+      return "/hub-dashboard";
+    case "customer":
+    default:
+      return "/customer-dashboard";
+  }
+}
 
 function Login() {
   const navigate = useNavigate();
@@ -14,10 +28,21 @@ function Login() {
     password: "",
     confirmPassword: "",
     role: "customer",
+    deliveryType: "pickup",
     city: "",
     village: ""
   });
   const [localError, setLocalError] = useState("");
+  const [locationState, setLocationState] = useState({
+    coordinates: null,
+    loading: false,
+    captured: false
+  });
+
+  const requiresLiveLocation = useMemo(
+    () => ["delivery_boy", "hub_manager"].includes(formData.role),
+    [formData.role]
+  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,6 +50,51 @@ function Login() {
       ...prev,
       [name]: value
     }));
+
+    if (name === "role" && !["delivery_boy", "hub_manager"].includes(value)) {
+      setLocationState({
+        coordinates: null,
+        loading: false,
+        captured: false
+      });
+    }
+  };
+
+  const handleCaptureLocation = () => {
+    setLocalError("");
+
+    if (!navigator.geolocation) {
+      setLocalError("Geolocation is not supported by this browser.");
+      return;
+    }
+
+    setLocationState((prev) => ({
+      ...prev,
+      loading: true
+    }));
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocationState({
+          coordinates: [position.coords.longitude, position.coords.latitude],
+          loading: false,
+          captured: true
+        });
+      },
+      (geoError) => {
+        setLocationState({
+          coordinates: null,
+          loading: false,
+          captured: false
+        });
+        setLocalError(geoError.message || "Unable to capture location.");
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    );
   };
 
   const handleLogin = async (e) => {
@@ -32,8 +102,8 @@ function Login() {
     setLocalError("");
 
     try {
-      await login(formData.email, formData.password);
-      navigate("/");
+      const response = await login(formData.email, formData.password);
+      navigate(getRedirectPath(response?.user?.role), { replace: true });
     } catch (err) {
       setLocalError(err.response?.data?.message || "Login failed");
     }
@@ -53,6 +123,11 @@ function Login() {
       return;
     }
 
+    if (requiresLiveLocation && !locationState.captured) {
+      setLocalError("Please capture your live location before registering.");
+      return;
+    }
+
     try {
       await register(
         formData.name,
@@ -61,9 +136,11 @@ function Login() {
         formData.password,
         formData.role,
         formData.city,
-        formData.village
+        formData.village,
+        locationState.coordinates,
+        formData.deliveryType
       );
-      navigate("/");
+      navigate(getRedirectPath(formData.role), { replace: true });
     } catch (err) {
       setLocalError(err.response?.data?.message || "Registration failed");
     }
@@ -82,8 +159,6 @@ function Login() {
             <h1 className="mt-5 max-w-lg text-5xl font-black leading-tight">
               Fresh produce meets local trust.
             </h1>
-
-            hello
             <p className="mt-6 max-w-xl text-base leading-7 text-emerald-50/90">
               Farmers manage crops, customers place direct orders, and the platform keeps everything organized in one shared dashboard.
             </p>
@@ -92,7 +167,7 @@ function Login() {
           <div className="grid gap-4 md:grid-cols-3">
             {[
               { value: "12+", label: "Available vegetables" },
-              { value: "2", label: "User roles" },
+              { value: "4", label: "User roles" },
               { value: "24/7", label: "Order visibility" }
             ].map((item, index) => (
               <div
@@ -210,6 +285,8 @@ function Login() {
                   >
                     <option value="customer">Customer</option>
                     <option value="farmer">Farmer</option>
+                    <option value="delivery_boy">Delivery Boy 🛵</option>
+                    <option value="hub_manager">Hub Manager 🏢</option>
                   </select>
 
                   <input
@@ -232,6 +309,62 @@ function Login() {
                   autoComplete="address-level3"
                   className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
                 />
+
+                {formData.role === "delivery_boy" ? (
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <label className="space-y-2">
+                      <span className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">Delivery Boy Type</span>
+                      <select
+                        name="deliveryType"
+                        value={formData.deliveryType}
+                        onChange={handleInputChange}
+                        className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
+                      >
+                        <option value="pickup">Pickup Boy</option>
+                        <option value="delivery">Last-Mile Delivery Boy</option>
+                      </select>
+                    </label>
+                    <div className="rounded-2xl border border-sky-100 bg-sky-50 px-4 py-3 text-sm text-sky-700">
+                      {formData.deliveryType === "delivery"
+                        ? "This account will receive hub-to-customer delivery batches."
+                        : "This account will receive farmer-to-hub pickup tasks."}
+                    </div>
+                  </div>
+                ) : null}
+
+                {requiresLiveLocation ? (
+                  <div className="rounded-[28px] border border-emerald-100 bg-emerald-50/70 p-4">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                      <div>
+                        <p className="text-sm font-black uppercase tracking-[0.18em] text-emerald-700">Live Location</p>
+                        <p className="mt-1 text-sm text-slate-600">
+                          Capture your current location so nearby batching and hub matching work correctly.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleCaptureLocation}
+                        disabled={locationState.loading}
+                        className="rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                      >
+                        {locationState.loading ? "Capturing..." : "Get My Location 📍"}
+                      </button>
+                    </div>
+
+                    {locationState.captured ? (
+                      <div className="mt-3 rounded-2xl border border-emerald-200 bg-white px-4 py-3 text-sm font-semibold text-emerald-700">
+                        Location Captured ✅
+                        <span className="ml-2 text-slate-500">
+                          {locationState.coordinates?.[1]?.toFixed(5)}, {locationState.coordinates?.[0]?.toFixed(5)}
+                        </span>
+                      </div>
+                    ) : (
+                      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">
+                        Capture location before registering this role
+                      </p>
+                    )}
+                  </div>
+                ) : null}
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <input
@@ -276,4 +409,3 @@ function Login() {
 }
 
 export default Login;
-

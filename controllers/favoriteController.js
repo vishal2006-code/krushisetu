@@ -63,7 +63,7 @@ exports.getCustomerFavorites = async (req, res) => {
     const customerId = req.user._id;
 
     const favorites = await Favorite.find({ customer: customerId })
-      .populate("vegetable", "name price emoji category image")
+      .populate("vegetable", "name price emoji category image unit")
       .populate("farmer", "name phone email city")
       .sort({ createdAt: -1 });
 

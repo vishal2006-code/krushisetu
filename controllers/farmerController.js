@@ -69,3 +69,14 @@ exports.getMyFarmerProfile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getAllFarmers = async (req, res) => {
+  try {
+    const farmers = await FarmerProfile.find()
+      .populate("farmer", "name");
+
+    res.json(farmers);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

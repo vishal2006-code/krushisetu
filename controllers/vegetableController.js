@@ -2,7 +2,42 @@ const Vegetable = require("../models/Vegetable");
 const getVegetableEmoji = require("../utils/getVegetableEmoji");
 const defaultVegetables = require("../config/defaultVegetables");
 
+const CATEGORY_ALIASES = {
+  vegetable: "vegetable",
+  vegetables: "vegetable",
+  root: "vegetable",
+  leafy: "vegetable",
+  bulb: "vegetable",
+  gourd: "vegetable",
+  fruity: "fruit",
+  fruit: "fruit",
+  fruits: "fruit",
+  grain: "grain",
+  grains: "grain"
+};
+
+function normalizeCategory(category) {
+  const normalized = String(category || "")
+    .trim()
+    .toLowerCase();
+
+  return CATEGORY_ALIASES[normalized] || "vegetable";
+}
+
+function normalizeUnit(unit) {
+  return String(unit || "").trim().toLowerCase() === "quintal" ? "quintal" : "kg";
+}
+
 async function ensureDefaultVegetables() {
+  await Vegetable.updateMany(
+    { category: { $nin: ["vegetable", "grain", "fruit"] } },
+    { $set: { category: "vegetable" } }
+  );
+  await Vegetable.updateMany(
+    { unit: { $exists: false } },
+    { $set: { unit: "kg" } }
+  );
+
   const existing = await Vegetable.find({}, "name").lean();
   const existingNames = new Set(existing.map((item) => item.name.toLowerCase()));
   const missing = defaultVegetables.filter((item) => !existingNames.has(item.name.toLowerCase()));
@@ -14,7 +49,7 @@ async function ensureDefaultVegetables() {
 
 exports.addVegetable = async (req, res) => {
   try {
-    const { name, category, price, emoji, image, season } = req.body;
+    const { name, category, price, emoji, image, season, unit } = req.body;
 
     if (!name || !category || !price || price <= 0) {
       return res.status(400).json({ message: "Name, category, and valid price are required" });
@@ -22,20 +57,21 @@ exports.addVegetable = async (req, res) => {
 
     const vegetable = await Vegetable.create({
       name: name.trim(),
-      category: category.trim(),
+      category: normalizeCategory(category),
       price: Number(price),
+      unit: normalizeUnit(unit),
       emoji: getVegetableEmoji(name, emoji),
       image,
       season
     });
 
     res.status(201).json({
-      message: "Vegetable added successfully",
+      message: "Product added successfully",
       vegetable
     });
   } catch (error) {
     if (error.code === 11000) {
-      res.status(400).json({ message: "Vegetable name already exists" });
+      res.status(400).json({ message: "Product name already exists" });
       return;
     }
 
@@ -46,7 +82,14 @@ exports.addVegetable = async (req, res) => {
 exports.getVegetables = async (req, res) => {
   try {
     await ensureDefaultVegetables();
-    const vegetables = await Vegetable.find({ isActive: true });
+    const category = req.query.category ? normalizeCategory(req.query.category) : null;
+    const filter = { isActive: true };
+
+    if (category && req.query.category !== "all") {
+      filter.category = category;
+    }
+
+    const vegetables = await Vegetable.find(filter).sort({ category: 1, name: 1 });
     res.status(200).json(vegetables);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -66,8 +109,8 @@ exports.searchVegetables = async (req, res) => {
       ];
     }
 
-    if (category) {
-      filter.category = { $regex: category, $options: "i" };
+    if (category && category !== "all") {
+      filter.category = normalizeCategory(category);
     }
 
     if (season) {
@@ -119,13 +162,12 @@ exports.getByCategory = async (req, res) => {
   try {
     const { category } = req.params;
 
-    const vegetables = await Vegetable.find({
-      category: { $regex: category, $options: "i" },
-      isActive: true
-    });
+    const normalizedCategory = normalizeCategory(category);
+
+    const vegetables = await Vegetable.find({ category: normalizedCategory, isActive: true });
 
     res.json({
-      category,
+      category: normalizedCategory,
       count: vegetables.length,
       vegetables
     });

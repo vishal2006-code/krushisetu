@@ -1,6 +1,5 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/useAuth";
 import { API_URL } from "./lib/api";
 import { getVegetableIcon } from "./utils/vegetableIcons";
@@ -32,14 +31,24 @@ function getRelevantItems(order, farmerId) {
   return [];
 }
 
+function formatPickupTaskStatus(status) {
+  switch (status) {
+    case "requested":
+      return "Request sent to pickup boy";
+    case "accepted":
+      return "Pickup boy accepted request";
+    default:
+      return "Waiting for pickup assignment";
+  }
+}
+
 function FarmerDashboard() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [activeOrderId, setActiveOrderId] = useState("");
   const { user, token } = useAuth();
 
-  // ✅ FIXED useEffect (NO double call)
   useEffect(() => {
     if (!token || !user || user.role !== "farmer") {
       setLoading(false);
@@ -54,11 +63,8 @@ function FarmerDashboard() {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        console.log("ORDERS:", res.data); // debug
-
         setOrders(res.data || []);
       } catch (err) {
-        console.error("FETCH ERROR:", err);
         setError(err.response?.data?.message || "Failed to load orders");
       } finally {
         setLoading(false);
@@ -66,35 +72,27 @@ function FarmerDashboard() {
     };
 
     fetchOrders();
+  }, [token, user]);
 
-  }, [token]); // ❗ ONLY token (IMPORTANT)
-
-  const updateItemStatus = async (orderId, itemId, newStatus) => {
+  const acceptOrder = async (orderId) => {
     try {
-      await axios.put(
-        `${API_URL}/orders/${orderId}/items/${itemId}/status`,
-        { status: newStatus },
+      setActiveOrderId(orderId);
+      const response = await axios.put(
+        `${API_URL}/orders/${orderId}/accept`,
+        {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setOrders(prev =>
-        prev.map(order => {
-          if (order._id === orderId) {
-            const updatedItems = (order.orderItems || []).map(item =>
-              item._id === itemId ? { ...item, status: newStatus } : item
-            );
-            return { ...order, orderItems: updatedItems };
-          }
-          return order;
-        })
+      setOrders((prev) =>
+        prev.map((order) => (order._id === orderId ? response.data.order : order))
       );
-
     } catch (err) {
-      alert("Error updating status: " + err.message);
+      alert(err.response?.data?.message || "Failed to assign pickup boy");
+    } finally {
+      setActiveOrderId("");
     }
   };
 
-  // ---------------- LOADING ----------------
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-green-50">
@@ -106,7 +104,6 @@ function FarmerDashboard() {
     );
   }
 
-  // ---------------- ERROR ----------------
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-green-50">
@@ -124,19 +121,17 @@ function FarmerDashboard() {
     );
   }
 
-  // ---------------- MAIN UI ----------------
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-8">
       <div className="max-w-7xl mx-auto">
-
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-green-700 mb-2">
             Welcome, {user?.name}! 🌾
           </h1>
-          <p className="text-gray-600">Manage your farm and orders</p>
+          <p className="text-gray-600">Manage your farm and pickup assignments</p>
         </div>
 
-        <h2 className="text-3xl font-bold text-gray-800 mb-8">📦 Orders</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-8">Orders</h2>
 
         {orders.length === 0 ? (
           <div className="bg-white text-center py-20 rounded-lg shadow-md">
@@ -147,15 +142,53 @@ function FarmerDashboard() {
           <div className="grid gap-6">
             {orders.map((order) => {
               const visibleItems = getRelevantItems(order, user?._id);
+              const canAssignPickup =
+                !order.pickupBoy &&
+                (
+                  order.status === "pending_farmer_acceptance" ||
+                  order.status === "accepted_by_farmer" ||
+                  visibleItems.some((item) => ["assigned", "accepted"].includes(item.status))
+                );
 
               return (
                 <div
                   key={order._id}
                   className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500"
                 >
-                  <div className="mb-4">
-                    <h3 className="text-xl font-bold">Order #{order._id.slice(-6)}</h3>
-                    <p>Customer: {order.customer?.name || "Customer unavailable"}</p>
+                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold">Order #{order._id.slice(-6)}</h3>
+                      <p>Customer: {order.customer?.name || "Customer unavailable"}</p>
+                      <p className="text-sm text-gray-500">Order status: {order.status}</p>
+                    </div>
+
+                    {canAssignPickup ? (
+                      <button
+                        onClick={() => acceptOrder(order._id)}
+                        disabled={activeOrderId === order._id}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                      >
+                        {activeOrderId === order._id ? "Assigning..." : "Accept & Assign Pickup"}
+                      </button>
+                    ) : null}
+                  </div>
+
+                  <div className="mb-5 rounded-2xl border border-blue-100 bg-blue-50 p-4">
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-700">
+                      Pickup Assignment
+                    </p>
+                    <p className="mt-2 text-slate-800 font-semibold">
+                      Delivery Boy: {order.pickupBoy?.name || "Not assigned yet"}
+                    </p>
+                    <p className="text-sm text-slate-600">
+                      Phone: {order.pickupBoy?.phone || "Will appear after assignment"}
+                    </p>
+                    <p className="text-sm text-slate-600">
+                      Task status: {formatPickupTaskStatus(order.batchMeta?.pickupTaskStatus)}
+                    </p>
+                    <p className="text-sm text-slate-600">
+                      Batch ID: {order.batchId || "Will be generated on assignment"}
+                    </p>
                   </div>
 
                   <div className="space-y-4">
@@ -178,15 +211,6 @@ function FarmerDashboard() {
                               ) : null}
                             </div>
                           </div>
-
-                          {!isLegacyItem && item.status === "assigned" ? (
-                            <button
-                              onClick={() => updateItemStatus(order._id, item._id, "accepted")}
-                              className="bg-blue-600 text-white px-3 py-1 rounded h-fit"
-                            >
-                              Accept
-                            </button>
-                          ) : null}
                         </div>
                       );
                     }) : (
@@ -204,7 +228,6 @@ function FarmerDashboard() {
         <div className="mt-8">
           <Chatbot />
         </div>
-
       </div>
     </div>
   );

@@ -103,7 +103,7 @@ function Chatbot() {
   };
 
   return (
-    <section className="glass-card h-full p-0">
+    <section className="h-full p-0">
       <div className="border-b border-slate-100 bg-gradient-to-r from-emerald-50 via-white to-cyan-50 px-6 py-5">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -181,7 +181,7 @@ function Chatbot() {
             onKeyDown={handleKeyDown}
             rows={3}
             placeholder={placeholder}
-            className="w-full rounded-[24px] border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
+            className="w-full rounded-[24px] border border-slate-200 bg-white px-4 py-3 text-black opacity-100 outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 dark:bg-white dark:text-black dark:placeholder:text-slate-400"
           />
 
           <div className="flex items-center justify-between gap-3">
@@ -203,4 +203,3 @@ function Chatbot() {
 }
 
 export default Chatbot;
-

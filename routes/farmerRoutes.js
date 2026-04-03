@@ -1,5 +1,9 @@
 const express = require("express");
-const { getMyFarmerProfile, updateFarmerProfile } = require("../controllers/farmerController");
+const {
+  getAllFarmers,
+  getMyFarmerProfile,
+  updateFarmerProfile
+} = require("../controllers/farmerController");
 const { protect } = require("../middlewares/authMiddleware");
 const { authorizeRoles } = require("../middlewares/roleMiddleware");
 
@@ -18,5 +22,7 @@ router.post(
   authorizeRoles("farmer"),
   updateFarmerProfile
 );
+
+router.get("/all", getAllFarmers);
 
 module.exports = router;
