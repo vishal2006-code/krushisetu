@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./context/useAuth";
 import { useTheme } from "./context/useTheme";
+import logoImage from "./assets/logo.png";
 
 // 🔥 प्रोफेशनल आयकॉन्स Lucide React मधून इम्पोर्ट केले आहेत
 import { 
@@ -96,10 +97,10 @@ function Navbar() {
 
   const navItemClass = ({ isActive }) =>
     [
-      "group flex items-center gap-3 rounded-[22px] px-4 py-3 text-sm font-bold tracking-[0.03em] transition-all duration-300",
+      "group flex items-center gap-3 rounded-[22px] px-4 py-3 text-sm font-bold tracking-[0.03em] transition-colors duration-200",
       isActive
-        ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-[0_18px_36px_rgba(16,185,129,0.25)]"
-        : "text-slate-600 hover:bg-white/80 hover:text-emerald-700 hover:shadow-sm dark:text-slate-300 dark:hover:bg-slate-800/80 dark:hover:text-emerald-300"
+        ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white opacity-100 shadow-[0_18px_36px_rgba(16,185,129,0.25)]"
+        : "text-slate-800 opacity-90 hover:bg-white/80 hover:text-emerald-700 hover:shadow-sm hover:opacity-100 dark:text-slate-300 dark:hover:bg-slate-800/80 dark:hover:text-emerald-300 dark:opacity-100"
     ].join(" ");
 
   return (
@@ -114,9 +115,12 @@ function Navbar() {
           >
             <Menu size={24} />
           </button>
-          <button type="button" onClick={() => navigate("/")} className="text-lg font-black tracking-[0.14em] text-emerald-600">
-            KRUSHISETU
-          </button>
+          <div className="flex items-center gap-2">
+            <img src={logoImage} alt="KrushiSetu Logo" className="h-8 w-8 rounded-lg object-cover" />
+            <button type="button" onClick={() => navigate("/")} className="text-lg font-black tracking-[0.14em] text-emerald-600">
+              KRUSHISETU
+            </button>
+          </div>
           <div className="h-10 w-10 rounded-full bg-emerald-500/10 p-1 flex items-center justify-center">
              <UserCircle size={24} className="text-emerald-600" />
           </div>
@@ -139,9 +143,12 @@ function Navbar() {
       >
         {/* Workspace Branding */}
         <div className="mb-8 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-500">Workspace</p>
-            <h1 className="mt-1 text-2xl font-black text-slate-900 dark:text-white">KrushiSetu</h1>
+          <div className="flex items-center gap-3">
+            <img src={logoImage} alt="KrushiSetu Logo" className="h-12 w-12 rounded-lg object-cover" />
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-500">Workspace</p>
+              <h1 className="mt-1 text-2xl font-black text-slate-900 dark:text-white">KrushiSetu</h1>
+            </div>
           </div>
           <button onClick={() => setIsMobileOpen(false)} className="md:hidden">
             <X size={24} className="text-slate-400" />
@@ -166,7 +173,7 @@ function Navbar() {
               className={navItemClass} 
               onClick={() => setIsMobileOpen(false)}
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 transition-colors group-hover:bg-emerald-100 dark:bg-slate-800 dark:group-hover:bg-emerald-900/30">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-900 transition-colors group-hover:bg-emerald-100 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-emerald-900/30 [.active_&]:bg-white/40 [.active_&]:text-slate-900">
                 {item.icon}
               </span>
               <span className="flex-1">{item.label}</span>

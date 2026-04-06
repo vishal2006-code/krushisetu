@@ -250,9 +250,9 @@ function HubManagerDashboard() {
                           <div key={order._id} className="rounded-3xl border border-white bg-white p-4 shadow-sm">
                             <div className="flex flex-col gap-4 xl:flex-row xl:justify-between">
                               <div className="space-y-2">
-                                <p className="text-lg font-black text-slate-900">Order #{order._id.slice(-6)}</p>
-                                <p className="text-sm text-slate-600">Pickup courier: {order.pickupBoy?.name || "Unassigned"}</p>
-                                <p className="text-sm text-slate-500">Customer: {order.customer?.name || "Customer"}</p>
+                                <p className="text-lg font-black text-slate-900 dark:text-white">Order #{order._id.slice(-6)}</p>
+                                <p className="text-sm text-slate-600 dark:text-slate-300">Pickup courier: {order.pickupBoy?.name || "Unassigned"}</p>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">Customer: {order.customer?.name || "Customer"}</p>
                               </div>
                               <div className="xl:w-[320px]">
                                 <OrderTracking currentStatus={order.status} />
@@ -358,13 +358,13 @@ function HubManagerDashboard() {
                     />
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-3">
-                        <p className="text-lg font-black text-slate-900">Order #{order._id.slice(-6)}</p>
+                        <p className="text-lg font-black text-slate-900 dark:text-white">Order #{order._id.slice(-6)}</p>
                         <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-emerald-700 shadow-sm">
                           {order.status}
                         </span>
                       </div>
-                      <p className="mt-2 text-sm text-slate-600">Customer: {order.customer?.name || "Customer"}</p>
-                      <p className="text-sm text-slate-500">Area: {order.batchMeta?.deliveryAreaLabel || "Set during dispatch"}</p>
+                      <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">Customer: {order.customer?.name || "Customer"}</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">Area: {order.batchMeta?.deliveryAreaLabel || "Set during dispatch"}</p>
                     </div>
                   </label>
                 ))

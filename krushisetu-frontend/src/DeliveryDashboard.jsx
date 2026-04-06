@@ -193,15 +193,15 @@ function DeliveryDashboard() {
                           <div className="flex flex-col gap-4 xl:flex-row xl:justify-between">
                             <div className="space-y-2">
                               <div className="flex items-center gap-3">
-                                <p className="text-lg font-black text-slate-900">Order #{order._id.slice(-6)}</p>
+                                <p className="text-lg font-black text-slate-900 dark:text-white">Order #{order._id.slice(-6)}</p>
                                 <StatusBadge status={order.status} />
                               </div>
-                              <p className="text-sm text-slate-600">Farmer: {order.assignedFarmer?.name || "Assigned farmer"}</p>
-                              <p className="text-sm text-slate-500">Farmer phone: {order.assignedFarmer?.phone || "Unavailable"}</p>
-                              <p className="text-sm text-slate-500">Farmer area: {order.assignedFarmer?.village || order.assignedFarmer?.city || "Unavailable"}</p>
-                              <p className="text-sm text-slate-500">Handover qty: {order.batchMeta?.farmerHandoverQuantity || 0} kg</p>
-                              <p className="text-sm text-slate-500">Batch total: {order.batchMeta?.totalBatchQuantity || 0} kg</p>
-                              <p className="text-sm text-slate-500">
+                              <p className="text-sm text-slate-600 dark:text-slate-300">Farmer: {order.assignedFarmer?.name || "Assigned farmer"}</p>
+                              <p className="text-sm text-slate-500 dark:text-slate-400">Farmer phone: {order.assignedFarmer?.phone || "Unavailable"}</p>
+                              <p className="text-sm text-slate-500 dark:text-slate-400">Farmer area: {order.assignedFarmer?.village || order.assignedFarmer?.city || "Unavailable"}</p>
+                              <p className="text-sm text-slate-500 dark:text-slate-400">Handover qty: {order.batchMeta?.farmerHandoverQuantity || 0} kg</p>
+                              <p className="text-sm text-slate-500 dark:text-slate-400">Batch total: {order.batchMeta?.totalBatchQuantity || 0} kg</p>
+                              <p className="text-sm text-slate-500 dark:text-slate-400">
                                 Request status: {order.batchMeta?.pickupTaskStatus === "accepted" ? "You accepted this task" : "Farmer sent you this pickup request"}
                               </p>
                             </div>
@@ -275,12 +275,12 @@ function DeliveryDashboard() {
                           <div className="flex flex-col gap-4 xl:flex-row xl:justify-between">
                             <div className="space-y-2">
                               <div className="flex items-center gap-3">
-                                <p className="text-lg font-black text-slate-900">Order #{order._id.slice(-6)}</p>
+                                <p className="text-lg font-black text-slate-900 dark:text-white">Order #{order._id.slice(-6)}</p>
                                 <StatusBadge status={order.status} />
                               </div>
-                              <p className="text-sm text-slate-600">Customer: {order.customer?.name || "Customer"}</p>
-                              <p className="text-sm text-slate-500">Address: {order.deliveryAddress || "No address available"}</p>
-                              <p className="text-sm text-slate-500">Area: {order.batchMeta?.deliveryAreaLabel || "Grouped route"}</p>
+                              <p className="text-sm text-slate-600 dark:text-slate-300">Customer: {order.customer?.name || "Customer"}</p>
+                              <p className="text-sm text-slate-500 dark:text-slate-400">Address: {order.deliveryAddress || "No address available"}</p>
+                              <p className="text-sm text-slate-500 dark:text-slate-400">Area: {order.batchMeta?.deliveryAreaLabel || "Grouped route"}</p>
                             </div>
 
                             <div className="xl:w-[320px]">

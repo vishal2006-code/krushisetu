@@ -267,7 +267,7 @@ function CustomerOrders() {
                       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-3">
-                            <h2 className="text-2xl font-black text-slate-900">
+                            <h2 className="text-2xl font-black text-slate-900 dark:text-white">
                               Order #{order._id.slice(-6)}
                             </h2>
                             <span
@@ -287,7 +287,7 @@ function CustomerOrders() {
                               {paymentStatus === "paid" ? "Paid" : "Payment Pending"}
                             </span>
                           </div>
-                          <p className="mt-2 text-sm font-semibold text-slate-600">
+                          <p className="mt-2 text-sm font-semibold text-slate-600 dark:text-slate-300">
                             {getPrimaryItemLabel(orderItems)}
                           </p>
                         </div>
@@ -364,20 +364,20 @@ function CustomerOrders() {
                                     {getVegetableIcon(item.vegetable?.name, item.vegetable?.emoji)}
                                   </div>
                                   <div className="min-w-0 flex-1">
-                                    <p className="font-bold text-slate-900">
+                                    <p className="font-bold text-slate-900 dark:text-white">
                                       {item.vegetable?.name || "Unknown Product"}
                                     </p>
-                                    <p className="mt-1 text-sm text-slate-600">
+                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
                                       {item.quantity || 0}{" "}
                                       {getUnitLabel(item.vegetable?.unit, item.quantity)} x{" "}
                                       {formatINR(item.price || 0)} ={" "}
                                       {formatINR((Number(item.quantity) || 0) * (Number(item.price) || 0))}
                                     </p>
-                                    <p className="mt-1 break-words text-xs text-slate-500">
+                                    <p className="mt-1 break-words text-xs text-slate-500 dark:text-slate-400">
                                       Farmer: {item.farmer?.name || "Not assigned"}
                                     </p>
                                   </div>
-                                  <span className="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-bold text-slate-600">
+                                  <span className="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-bold text-slate-600 dark:text-slate-300 dark:border-slate-600 dark:bg-slate-700">
                                     {formatLabel(item.status, "Assigned")}
                                   </span>
                                 </div>
